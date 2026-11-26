@@ -23,11 +23,11 @@
             sans: ['Inter', 'sans-serif'],
           },
           colors: {
-            obsidian: '#070709',
-            carbon: '#111115',
-            steel: '#1c1c22',
-            chrome: '#d4d4d8',
-            crimson: '#dc2626',
+            obsidian: '#06070a',
+            carbon: '#101217',
+            steel: '#1a1d24',
+            chrome: '#e4e4e7',
+            slateaccent: '#a1a1aa',
           }
         }
       }
@@ -36,7 +36,7 @@
 
   <style>
     body {
-      background-color: #070709;
+      background-color: #06070a;
       color: #f4f4f5;
       overflow-x: hidden;
     }
@@ -46,67 +46,58 @@
       width: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #070709;
+      background: #06070a;
     }
     ::-webkit-scrollbar-thumb {
       background: #27272a;
       border-radius: 999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #dc2626;
+      background: #a1a1aa;
     }
 
     /* Glass & Metallic Surfaces */
     .glass-nav {
-      background: rgba(7, 7, 9, 0.82);
+      background: rgba(6, 7, 10, 0.82);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .obsidian-card {
-      background: linear-gradient(145deg, #121216 0%, #0b0b0e 100%);
+      background: linear-gradient(145deg, #12141a 0%, #090b0f 100%);
       border: 1px solid rgba(255, 255, 255, 0.08);
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .obsidian-card:hover {
-      border-color: rgba(212, 212, 216, 0.28);
+      border-color: rgba(228, 228, 231, 0.32);
       transform: translateY(-4px);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(220, 38, 38, 0.12);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.85), 0 0 25px -5px rgba(161, 161, 170, 0.14);
     }
 
     .chrome-text {
-      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 60%, #52525b 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #c4c4cc 55%, #71717a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Subtle Scanline Overlay for Promo Video Reel */
     .reel-scanlines {
       background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%,
-        rgba(0, 0, 0, 0.28) 50%
+        rgba(18, 18, 22, 0) 50%,
+        rgba(0, 0, 0, 0.24) 50%
       );
       background-size: 100% 4px;
       pointer-events: none;
     }
-
-    @keyframes pulseSlow {
-      0%, 100% { opacity: 0.45; transform: scale(1); }
-      50% { opacity: 0.85; transform: scale(1.05); }
-    }
-    .animate-flare {
-      animation: pulseSlow 4s ease-in-out infinite;
-    }
   </style>
 </head>
-<body class="font-sans antialiased selection:bg-crimson selection:text-white">
+<body class="font-sans antialiased selection:bg-zinc-300 selection:text-obsidian">
 
-  <!-- Toast Notification Box (Replaces alert) -->
+  <!-- Toast Notification Box -->
   <div id="toast-box" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
     <div class="bg-carbon border border-zinc-700 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3">
-      <span id="toast-dot" class="w-2.5 h-2.5 rounded-full bg-crimson animate-ping"></span>
+      <span id="toast-dot" class="w-2.5 h-2.5 rounded-full bg-zinc-300 animate-ping"></span>
       <span id="toast-msg" class="text-sm font-medium tracking-wide">Produit ajouté au panier</span>
     </div>
   </div>
@@ -122,8 +113,8 @@
           <defs>
             <linearGradient id="navStarGrad" x1="0" y1="0" x2="60" y2="110" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stop-color="#ffffff"/>
-              <stop offset="50%" stop-color="#a1a1aa"/>
-              <stop offset="100%" stop-color="#dc2626"/>
+              <stop offset="55%" stop-color="#a1a1aa"/>
+              <stop offset="100%" stop-color="#52525b"/>
             </linearGradient>
           </defs>
         </svg>
@@ -139,81 +130,81 @@
       </nav>
 
       <!-- Cart Trigger -->
-      <button onclick="toggleCart(true)" class="relative flex items-center gap-2.5 bg-carbon hover:bg-steel border border-zinc-800 hover:border-zinc-600 px-4 py-2.5 rounded-xl transition cursor-pointer">
+      <button type="button" onclick="toggleCart(true)" class="relative flex items-center gap-2.5 bg-carbon hover:bg-steel border border-zinc-800 hover:border-zinc-500 px-4 py-2.5 rounded-xl transition cursor-pointer">
         <svg class="w-5 h-5 text-chrome" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
         <span class="text-xs font-grotesk uppercase tracking-widest font-bold hidden sm:inline">Panier</span>
-        <span id="cart-badge" class="bg-crimson text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        <span id="cart-badge" class="bg-zinc-200 text-obsidian text-xs font-bold px-2 py-0.5 rounded-full">0</span>
       </button>
     </div>
   </header>
 
-  <!-- HERO SECTION: Interactive 3D Cinematic Brand Promo Video Showcase -->
+  <!-- HERO SECTION: Deep Space 3D Star Brand Film -->
   <section id="reel" class="relative min-h-screen pt-20 flex flex-col justify-between overflow-hidden border-b border-zinc-900">
-    <!-- Three.js WebGL Canvas Container -->
-    <div id="canvas-wrapper" class="absolute inset-0 z-0 cursor-grab active:cursor-grabbing">
+    <!-- Three.js WebGL Space Canvas Container -->
+    <div id="canvas-wrapper" class="absolute inset-0 z-0 cursor-grab active:cursor-grabbing bg-[radial-gradient(ellipse_at_top,#151821_0%,#07080c_55%,#040406_100%)]">
       <canvas id="emblem-canvas" class="w-full h-full block"></canvas>
     </div>
 
-    <!-- Cinematic Vignette, Lens Flare & Scanlines -->
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,#070709_92%)] pointer-events-none z-10"></div>
-    <div class="reel-scanlines absolute inset-0 z-10 opacity-40"></div>
+    <!-- Subtle Cosmic Vignette & Scanlines -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_28%,#06070a_94%)] pointer-events-none z-10"></div>
+    <div class="reel-scanlines absolute inset-0 z-10 opacity-30"></div>
 
     <!-- Top Video Reel HUD Bar -->
     <div class="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex flex-wrap items-center justify-between gap-4 pointer-events-none">
-      <div class="flex items-center gap-3 bg-black/60 backdrop-blur-md border border-zinc-800/80 px-3.5 py-1.5 rounded-full">
-        <span class="w-2 h-2 rounded-full bg-crimson animate-pulse"></span>
-        <span class="font-grotesk text-[11px] uppercase tracking-[0.25em] text-zinc-300">CAM_01 // OBSIDIAN EMBLEM REEL</span>
+      <div class="flex items-center gap-3 bg-black/65 backdrop-blur-md border border-zinc-700/70 px-3.5 py-1.5 rounded-full">
+        <span class="w-2 h-2 rounded-full bg-zinc-300 animate-pulse"></span>
+        <span class="font-grotesk text-[11px] uppercase tracking-[0.25em] text-zinc-200">DEEP_SPACE_01 // ORBITAL STAR REEL</span>
       </div>
-      <div class="font-grotesk text-xs tracking-widest text-zinc-400 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-zinc-800/80">
-        <span id="reel-timer">00:00:00</span> • 60 FPS • INTERACTIVE 3D
+      <div class="font-grotesk text-xs tracking-widest text-zinc-300 bg-black/55 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-zinc-700/70">
+        <span id="reel-timer">00:00:00</span> • 60 FPS • SPACE 3D
       </div>
     </div>
 
     <!-- Center-Bottom Overlay Copy & Video Controls -->
     <div class="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-48 md:pt-64 flex flex-col lg:flex-row lg:items-end justify-between gap-8 pointer-events-none">
       <div class="max-w-2xl pointer-events-auto">
-        <p class="font-grotesk text-crimson text-xs sm:text-sm uppercase tracking-[0.3em] font-bold mb-3">
-          DROP 01 • CYBER-GOTHIC ATHLETICS
+        <p class="font-grotesk text-zinc-300 text-xs sm:text-sm uppercase tracking-[0.3em] font-bold mb-3">
+          DROP 01 • ORBITAL ATHLETIC ARCHITECTURE
         </p>
         <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight leading-[0.95] chrome-text mb-4">
           FORGED IN OBSIDIAN.
         </h1>
-        <p class="text-zinc-400 text-sm sm:text-base max-w-xl leading-relaxed mb-7">
-          Compression seconde peau haute densité (250 GSM). Conçue pour sculpter la silhouette athlétique avec notre emblème 3D embossé et motifs tribaux carbone.
+        <p class="text-zinc-300/90 text-sm sm:text-base max-w-xl leading-relaxed mb-7">
+          Compression seconde peau haute densité (250 GSM). Conçue pour sculpter la silhouette athlétique avec notre étoile métallique en apesanteur et finition titane/argent.
         </p>
         <div class="flex flex-wrap items-center gap-4">
-          <a href="#collection" class="bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs sm:text-sm uppercase tracking-[0.2em] px-7 py-4 rounded-xl transition shadow-lg shadow-white/5">
+          <a href="#collection" class="bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs sm:text-sm uppercase tracking-[0.2em] px-7 py-4 rounded-xl transition shadow-lg shadow-white/10">
             Explorer le Drop
           </a>
-          <a href="#size-finder" class="bg-carbon/90 hover:bg-steel text-white border border-zinc-700 font-grotesk font-bold text-xs sm:text-sm uppercase tracking-[0.2em] px-6 py-4 rounded-xl transition">
+          <a href="#size-finder" class="bg-carbon/90 hover:bg-steel text-white border border-zinc-600 font-grotesk font-bold text-xs sm:text-sm uppercase tracking-[0.2em] px-6 py-4 rounded-xl transition">
             Trouver ma Taille
           </a>
         </div>
       </div>
 
       <!-- Interactive Promo Reel Controls -->
-      <div class="pointer-events-auto bg-black/75 backdrop-blur-xl border border-zinc-800 p-4 rounded-2xl flex flex-col gap-3 min-w-[260px]">
+      <div class="pointer-events-auto bg-black/75 backdrop-blur-xl border border-zinc-700/80 p-4 rounded-2xl flex flex-col gap-3 min-w-[260px]">
         <div class="flex items-center justify-between text-[11px] font-grotesk uppercase tracking-widest text-zinc-400">
-          <span>Contrôle Vidéo 3D</span>
-          <span id="vibe-label" class="text-crimson font-bold">CRIMSON ECLIPSE</span>
+          <span>Contrôle Espace 3D</span>
+          <span id="vibe-label" class="text-zinc-200 font-bold">TITANIUM SILVER</span>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="replayReel()" class="flex items-center justify-center gap-2 bg-steel hover:bg-zinc-700 text-white text-xs font-grotesk uppercase tracking-wider py-2.5 px-3 rounded-xl border border-zinc-700 transition cursor-pointer">
+          <button type="button" onclick="replayReel()" class="flex items-center justify-center gap-2 bg-steel hover:bg-zinc-700 text-white text-xs font-grotesk uppercase tracking-wider py-2.5 px-3 rounded-xl border border-zinc-600 transition cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
             Replay
           </button>
-          <button onclick="toggleVibe()" class="flex items-center justify-center gap-2 bg-crimson/20 hover:bg-crimson/30 text-white text-xs font-grotesk uppercase tracking-wider py-2.5 px-3 rounded-xl border border-crimson/50 transition cursor-pointer">
-            <svg class="w-4 h-4 text-crimson" fill="currentColor" viewBox="0 0 20 20">
+          <button type="button" onclick="toggleVibe()" class="flex items-center justify-center gap-2 bg-zinc-200/15 hover:bg-zinc-200/25 text-zinc-100 text-xs font-grotesk uppercase tracking-wider py-2.5 px-3 rounded-xl border border-zinc-500/60 transition cursor-pointer">
+            <svg class="w-4 h-4 text-zinc-200" fill="currentColor" viewBox="0 0 20 20">
               <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/>
             </svg>
-            Toggle Vibe
+            Shade Shift
           </button>
         </div>
-        <p class="text-[11px] text-zinc-500 text-center">Glissez sur l'étoile 3D pour inspecter le relief</p>
+        <p class="text-[11px] text-zinc-400 text-center">Glissez dans l'espace pour faire pivoter l'étoile</p>
       </div>
     </div>
   </section>
@@ -222,7 +213,7 @@
   <section id="collection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-4">
       <div>
-        <span class="font-grotesk text-crimson text-xs uppercase tracking-[0.25em] font-bold">ARMORY // DROP 01</span>
+        <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.25em] font-bold">ARMORY // DROP 01</span>
         <h2 class="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-white mt-2">
           COMPRESSION SERIES
         </h2>
@@ -245,7 +236,7 @@
 
         <!-- Left: Fabric Tech Specs -->
         <div id="tech" class="lg:col-span-6 space-y-6">
-          <span class="font-grotesk text-crimson text-xs uppercase tracking-[0.25em] font-bold">ENGINEERED TEXTILE</span>
+          <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.25em] font-bold">ENGINEERED TEXTILE</span>
           <h2 class="font-display text-3xl sm:text-4xl font-extrabold uppercase text-white">
             TECHNOLOGIE SECONDE PEAU
           </h2>
@@ -255,7 +246,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div class="bg-obsidian border border-zinc-800/90 p-5 rounded-2xl">
-              <div class="text-crimson font-grotesk font-bold text-lg mb-1">250 GSM</div>
+              <div class="text-chrome font-grotesk font-bold text-lg mb-1">250 GSM</div>
               <div class="text-white font-semibold text-sm mb-1">Densité Pro-Compression</div>
               <p class="text-zinc-500 text-xs">Opacité totale et maintien musculaire ferme sans restriction.</p>
             </div>
@@ -270,7 +261,7 @@
               <p class="text-zinc-500 text-xs">78% Nylon Tactel / 22% Élasthanne Lycra Sport.</p>
             </div>
             <div class="bg-obsidian border border-zinc-800/90 p-5 rounded-2xl">
-              <div class="text-crimson font-grotesk font-bold text-lg mb-1">AERO-DRY</div>
+              <div class="text-chrome font-grotesk font-bold text-lg mb-1">AERO-DRY</div>
               <div class="text-white font-semibold text-sm mb-1">Évacuation Thermique</div>
               <p class="text-zinc-500 text-xs">Séchage ultra-rapide et traitement anti-odeurs.</p>
             </div>
@@ -294,12 +285,12 @@
               <div>
                 <label class="block text-xs font-grotesk uppercase tracking-wider text-zinc-400 mb-2">Taille (cm)</label>
                 <input type="number" id="calc-height" placeholder="Ex: 178" min="145" max="215"
-                  class="w-full bg-obsidian border border-zinc-800 focus:border-crimson rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
+                  class="w-full bg-obsidian border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
               </div>
               <div>
                 <label class="block text-xs font-grotesk uppercase tracking-wider text-zinc-400 mb-2">Poids (kg)</label>
                 <input type="number" id="calc-weight" placeholder="Ex: 76" min="45" max="140"
-                  class="w-full bg-obsidian border border-zinc-800 focus:border-crimson rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
+                  class="w-full bg-obsidian border border-zinc-800 focus:border-zinc-400 rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
               </div>
             </div>
 
@@ -307,7 +298,7 @@
               <label class="block text-xs font-grotesk uppercase tracking-wider text-zinc-400 mb-2">Préférence de Fit</label>
               <div class="grid grid-cols-2 gap-3">
                 <button type="button" id="fit-pro" onclick="setFitPref('pro')"
-                  class="fit-pref-btn bg-crimson/20 border border-crimson text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer">
+                  class="fit-pref-btn bg-zinc-200/15 border border-zinc-300 text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer">
                   Ultra-Serré (Pro Fit)
                 </button>
                 <button type="button" id="fit-comfort" onclick="setFitPref('comfort')"
@@ -317,17 +308,16 @@
               </div>
             </div>
 
-            <button onclick="calculateSize()" class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-xl transition cursor-pointer">
+            <button type="button" onclick="calculateSize()" class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-xl transition cursor-pointer">
               Calculer Ma Taille Recommandée
             </button>
 
-            <!-- Result Box -->
-            <div id="size-result" class="hidden mt-6 bg-obsidian border border-zinc-800 rounded-2xl p-4 flex items-center justify-between">
+            <div id="size-result" class="hidden mt-6 bg-obsidian border border-zinc-700 rounded-2xl p-4 flex items-center justify-between gap-4">
               <div>
                 <span class="text-xs text-zinc-400 block">Taille Recommandée :</span>
                 <span id="rec-size-note" class="text-xs text-zinc-300 mt-0.5 block">Compression maximale au niveau des pectoraux et bras.</span>
               </div>
-              <div id="rec-size-badge" class="font-display text-3xl font-extrabold text-crimson bg-crimson/10 border border-crimson/40 px-5 py-2 rounded-xl">
+              <div id="rec-size-badge" class="font-display text-3xl font-extrabold text-white bg-zinc-800 border border-zinc-500 px-5 py-2 rounded-xl">
                 L
               </div>
             </div>
@@ -346,58 +336,50 @@
         <span class="text-zinc-600 text-xs">|</span>
         <span class="text-zinc-500 text-xs">Tunisia Performance Division</span>
       </div>
-      <p class="text-zinc-500 text-xs">
+      <p class="text-zinc-500 text-xs text-center sm:text-right">
         &copy; 2026 ASTRON ATHLETICS. Tous droits réservés. Paiement à la livraison partout en Tunisie.
       </p>
     </div>
   </footer>
 
   <!-- QUICK VIEW / FABRIC TECH MODAL -->
-  <div id="quickview-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+  <div id="quickview-modal" onclick="if(event.target===this) closeQuickView()" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
     <div class="obsidian-card max-w-2xl w-full rounded-3xl overflow-hidden shadow-2xl border border-zinc-700">
       <div class="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
-        <span class="font-grotesk text-xs uppercase tracking-[0.2em] text-crimson font-bold">SPÉCIFICATIONS TECHNIQUES</span>
-        <button onclick="closeQuickView()" class="text-zinc-400 hover:text-white text-2xl leading-none cursor-pointer">&times;</button>
+        <span class="font-grotesk text-xs uppercase tracking-[0.2em] text-zinc-300 font-bold">SPÉCIFICATIONS TECHNIQUES</span>
+        <button type="button" onclick="closeQuickView()" class="text-zinc-400 hover:text-white text-2xl leading-none cursor-pointer">&times;</button>
       </div>
-      <div id="quickview-content" class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-        <!-- Populated by JS -->
-      </div>
+      <div id="quickview-content" class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6 items-center"></div>
     </div>
   </div>
 
   <!-- SLIDE-OUT CART & TUNISIA COD CHECKOUT DRAWER -->
-  <div id="cart-drawer" class="fixed inset-0 z-50 hidden justify-end bg-black/80 backdrop-blur-sm">
+  <div id="cart-drawer" onclick="if(event.target===this) toggleCart(false)" class="fixed inset-0 z-50 hidden justify-end bg-black/80 backdrop-blur-sm">
     <div class="bg-carbon w-full max-w-md h-full border-l border-zinc-800 flex flex-col justify-between overflow-y-auto">
 
-      <!-- Top Header -->
       <div class="p-6 border-b border-zinc-800 flex items-center justify-between sticky top-0 bg-carbon/95 backdrop-blur-md z-10">
         <div>
           <h3 class="font-display text-xl font-bold uppercase text-white">Votre Panier</h3>
           <p id="free-shipping-bar" class="text-xs text-zinc-400 mt-0.5">Livraison gratuite dès 150 TND</p>
         </div>
-        <button onclick="toggleCart(false)" class="w-9 h-9 rounded-xl bg-steel text-zinc-300 hover:text-white flex items-center justify-center text-xl cursor-pointer">&times;</button>
+        <button type="button" onclick="toggleCart(false)" class="w-9 h-9 rounded-xl bg-steel text-zinc-300 hover:text-white flex items-center justify-center text-xl cursor-pointer">&times;</button>
       </div>
 
-      <!-- Cart Items List -->
-      <div id="cart-items-container" class="p-6 flex-1 space-y-4">
-        <!-- Items injected via JS -->
-      </div>
+      <div id="cart-items-container" class="p-6 flex-1 space-y-4"></div>
 
-      <!-- Order Confirmation Receipt View (Hidden until order submitted) -->
       <div id="order-receipt" class="hidden p-6 m-6 bg-obsidian border border-emerald-500/40 rounded-2xl space-y-4">
         <div class="flex items-center gap-3 text-emerald-400">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
           <h4 class="font-display font-bold uppercase text-base">Commande Confirmée !</h4>
         </div>
         <div id="receipt-details" class="text-xs text-zinc-300 space-y-1.5 leading-relaxed"></div>
-        <button onclick="resetAfterReceipt()" class="w-full bg-steel hover:bg-zinc-700 text-white font-grotesk text-xs uppercase tracking-widest py-3 rounded-xl transition cursor-pointer">
+        <button type="button" onclick="resetAfterReceipt()" class="w-full bg-steel hover:bg-zinc-700 text-white font-grotesk text-xs uppercase tracking-widest py-3 rounded-xl transition cursor-pointer">
           Continuer mes achats
         </button>
       </div>
 
-      <!-- Checkout Form & Totals -->
       <div id="checkout-section" class="p-6 border-t border-zinc-800 bg-obsidian/90 space-y-4">
         <div class="space-y-1.5 text-sm">
           <div class="flex justify-between text-zinc-400">
@@ -410,19 +392,19 @@
           </div>
           <div class="flex justify-between text-white font-display font-bold text-lg pt-2 border-t border-zinc-800">
             <span>Total à payer (COD)</span>
-            <span id="cart-total" class="text-crimson">0 TND</span>
+            <span id="cart-total" class="text-chrome">0 TND</span>
           </div>
         </div>
 
         <form id="cod-form" onsubmit="handleCheckout(event)" class="space-y-3 pt-2">
           <input type="text" id="cust-name" placeholder="Nom & Prénom *" required
-            class="w-full bg-carbon border border-zinc-800 focus:border-crimson rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            class="w-full bg-carbon border border-zinc-800 focus:border-zinc-400 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
 
           <input type="tel" id="cust-phone" placeholder="Téléphone (8 chiffres, ex: 55123456) *" pattern="[0-9]{8}" maxlength="8" required
-            class="w-full bg-carbon border border-zinc-800 focus:border-crimson rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            class="w-full bg-carbon border border-zinc-800 focus:border-zinc-400 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
 
           <select id="cust-gov" required
-            class="w-full bg-carbon border border-zinc-800 focus:border-crimson rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
+            class="w-full bg-carbon border border-zinc-800 focus:border-zinc-400 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
             <option value="">Sélectionner votre Gouvernorat (24) *</option>
             <option value="Tunis">Tunis</option>
             <option value="Ariana">Ariana</option>
@@ -451,9 +433,9 @@
           </select>
 
           <input type="text" id="cust-address" placeholder="Adresse complète (Rue, Ville, Code Postal) *" required
-            class="w-full bg-carbon border border-zinc-800 focus:border-crimson rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            class="w-full bg-carbon border border-zinc-800 focus:border-zinc-400 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
 
-          <button type="submit" id="submit-order-btn" class="w-full bg-crimson hover:bg-red-700 text-white font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-xl transition shadow-lg shadow-crimson/20 cursor-pointer">
+          <button type="submit" id="submit-order-btn" class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-xl transition shadow-lg shadow-white/10 cursor-pointer">
             Confirmer la Commande (COD)
           </button>
         </form>
@@ -466,54 +448,50 @@
     /* ==========================================================================
        GOOGLE SHEETS WEB APP URL (ASTRON - Commandes)
        ========================================================================== */
-  
     const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz-HK9ycbWOxzcIS8P7OUDOmA6mb3kElxzMTHfTfYY2TWuxMmEJt28ynPirMy2zYK6y/exec";
-    
 
     /* ==========================================================================
-       1. THREE.JS 3D PROMOTIONAL REEL: ELONGATED GOTHIC 4-POINT STAR EMBLEM
+       1. THREE.JS DEEP SPACE 3D STAR REEL (SILVER / GRAPHITE / CHROME)
        ========================================================================== */
-    let scene, camera, renderer, starGroup, rimLight1, rimLight2, particleSystem;
+    let scene, camera, renderer, starGroup, rimLight1, rimLight2, farStars, nearStars;
     let isDragging = false, prevMouse = { x: 0, y: 0 };
     let targetRotation = { x: 0.08, y: 0 };
-    let vibeMode = 0; // 0 = Crimson Eclipse, 1 = Pure Chrome Obsidian
+    let vibeMode = 0; // 0 = Titanium Silver, 1 = Graphite Ash
     let reelStartTime = Date.now();
     let introBurst = 1.0;
 
     function init3DHero() {
       const canvas = document.getElementById('emblem-canvas');
       const wrapper = document.getElementById('canvas-wrapper');
+      if (!canvas || !wrapper || typeof THREE === 'undefined') return;
 
       scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x070709, 0.045);
+      scene.fog = new THREE.FogExp2(0x06070a, 0.028);
 
-      camera = new THREE.PerspectiveCamera(42, wrapper.clientWidth / wrapper.clientHeight, 0.1, 100);
+      camera = new THREE.PerspectiveCamera(42, wrapper.clientWidth / wrapper.clientHeight, 0.1, 140);
       camera.position.set(0, -0.2, 8.2);
 
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
       renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.35;
+      renderer.toneMappingExposure = 1.4;
 
-      // Group containing the 3D Emblem
       starGroup = new THREE.Group();
       scene.add(starGroup);
 
-      // Build the exact Gothic 4-Point Star with Long Vertical Tail & Lower Detach Spike
-      // Main Upper 4-Point Cross Shape
+      // Elongated Gothic 4-Point Star
       const upperStarShape = new THREE.Shape();
-      upperStarShape.moveTo(0, 2.35); // Top sharp needle
+      upperStarShape.moveTo(0, 2.35);
       upperStarShape.quadraticCurveTo(0.14, 0.45, 0.35, 0.28);
-      upperStarShape.quadraticCurveTo(0.65, 0.12, 1.85, 0.05); // Right sharp wing
+      upperStarShape.quadraticCurveTo(0.65, 0.12, 1.85, 0.05);
       upperStarShape.quadraticCurveTo(0.65, -0.06, 0.35, -0.22);
-      upperStarShape.quadraticCurveTo(0.14, -0.45, 0, -2.15); // Long vertical downward blade
+      upperStarShape.quadraticCurveTo(0.14, -0.45, 0, -2.15);
       upperStarShape.quadraticCurveTo(-0.14, -0.45, -0.35, -0.22);
-      upperStarShape.quadraticCurveTo(-0.65, -0.06, -1.85, 0.05); // Left sharp wing
+      upperStarShape.quadraticCurveTo(-0.65, -0.06, -1.85, 0.05);
       upperStarShape.quadraticCurveTo(-0.65, 0.12, -0.35, 0.28);
       upperStarShape.quadraticCurveTo(-0.14, 0.45, 0, 2.35);
 
-      // Lower Detached Drip/Spike (matching the chest emblem in reference photo)
       const lowerSpikeShape = new THREE.Shape();
       lowerSpikeShape.moveTo(0, -2.35);
       lowerSpikeShape.quadraticCurveTo(0.12, -2.65, 0.24, -2.72);
@@ -533,78 +511,89 @@
 
       const upperGeo = new THREE.ExtrudeGeometry(upperStarShape, extrudeSettings);
       const lowerGeo = new THREE.ExtrudeGeometry(lowerSpikeShape, extrudeSettings);
-
-      // Center depth
       upperGeo.translate(0, 0.55, -0.11);
       lowerGeo.translate(0, 0.55, -0.11);
 
-      // Obsidian Chrome Material (Dark metallic sheen like embossed black silicone/steel)
-      const obsidianMetalMat = new THREE.MeshStandardMaterial({
-        color: 0x18181d,
-        metalness: 0.92,
-        roughness: 0.22,
+      const metallicStarMat = new THREE.MeshStandardMaterial({
+        color: 0x262930,
+        metalness: 0.94,
+        roughness: 0.2,
       });
 
-      const upperMesh = new THREE.Mesh(upperGeo, obsidianMetalMat);
-      const lowerMesh = new THREE.Mesh(lowerGeo, obsidianMetalMat);
+      const upperMesh = new THREE.Mesh(upperGeo, metallicStarMat);
+      const lowerMesh = new THREE.Mesh(lowerGeo, metallicStarMat);
 
-      // Subtle glowing wireframe/edge highlight for cyber-gothic luxury look
       const upperEdges = new THREE.EdgesGeometry(upperGeo, 25);
-      const edgeMat = new THREE.LineBasicMaterial({ color: 0x71717a, transparent: true, opacity: 0.35 });
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0xd4d4d8, transparent: true, opacity: 0.45 });
       const upperWire = new THREE.LineSegments(upperEdges, edgeMat);
 
       starGroup.add(upperMesh);
       starGroup.add(lowerMesh);
       starGroup.add(upperWire);
 
-      // Cinematic Orbital Ring behind the star
-      const ringGeo = new THREE.TorusGeometry(2.9, 0.012, 16, 120);
-      const ringMat = new THREE.MeshBasicMaterial({ color: 0xdc2626, transparent: true, opacity: 0.35 });
+      // Orbital Grey/Silver Ring
+      const ringGeo = new THREE.TorusGeometry(2.95, 0.012, 16, 140);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0xa1a1aa, transparent: true, opacity: 0.38 });
       const orbitalRing = new THREE.Mesh(ringGeo, ringMat);
       orbitalRing.rotation.x = Math.PI / 2.6;
       orbitalRing.rotation.y = 0.25;
       orbitalRing.name = "orbitalRing";
       starGroup.add(orbitalRing);
 
-      // Dramatic Studio Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
+      // Space Lighting (Cool Silver & Slate)
+      const ambientLight = new THREE.AmbientLight(0xd4d4d8, 0.42);
       scene.add(ambientLight);
 
-      // Key Chrome Top Light
-      const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
-      keyLight.position.set(3, 6, 5);
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+      keyLight.position.set(3.5, 6, 5);
       scene.add(keyLight);
 
-      // Crimson Rim Light (Left/Back)
-      rimLight1 = new THREE.PointLight(0xdc2626, 4.5, 18);
-      rimLight1.position.set(-4.5, 1.5, 2.5);
+      rimLight1 = new THREE.PointLight(0xe4e4e7, 4.2, 22);
+      rimLight1.position.set(-4.8, 1.8, 2.5);
       scene.add(rimLight1);
 
-      // Cold Silver Rim Light (Right/Bottom)
-      rimLight2 = new THREE.PointLight(0xe4e4e7, 3.2, 18);
-      rimLight2.position.set(4.5, -2.5, 3);
+      rimLight2 = new THREE.PointLight(0x94a3b8, 3.0, 22);
+      rimLight2.position.set(4.8, -2.5, 3);
       scene.add(rimLight2);
 
-      // Atmospheric Floating Ember & Chrome Dust Particles
-      const particleCount = 160;
-      const pGeo = new THREE.BufferGeometry();
-      const positions = new Float32Array(particleCount * 3);
-      for (let i = 0; i < particleCount * 3; i += 3) {
-        positions[i] = (Math.random() - 0.5) * 16;
-        positions[i + 1] = (Math.random() - 0.5) * 12;
-        positions[i + 2] = (Math.random() - 0.5) * 10;
+      // Deep Space Starfield Layer 1 (Distant Stars)
+      const farCount = 650;
+      const farGeo = new THREE.BufferGeometry();
+      const farPos = new Float32Array(farCount * 3);
+      for (let i = 0; i < farCount * 3; i += 3) {
+        farPos[i] = (Math.random() - 0.5) * 48;
+        farPos[i + 1] = (Math.random() - 0.5) * 36;
+        farPos[i + 2] = -6 - Math.random() * 28;
       }
-      pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const pMat = new THREE.PointsMaterial({
-        color: 0xdc2626,
-        size: 0.045,
+      farGeo.setAttribute('position', new THREE.BufferAttribute(farPos, 3));
+      const farMat = new THREE.PointsMaterial({
+        color: 0xd4d4d8,
+        size: 0.065,
         transparent: true,
         opacity: 0.65
       });
-      particleSystem = new THREE.Points(pGeo, pMat);
-      scene.add(particleSystem);
+      farStars = new THREE.Points(farGeo, farMat);
+      scene.add(farStars);
 
-      // Mouse & Touch Drag Controls for 3D Inspection
+      // Deep Space Starfield Layer 2 (Brighter Foreground Stars & Dust)
+      const nearCount = 220;
+      const nearGeo = new THREE.BufferGeometry();
+      const nearPos = new Float32Array(nearCount * 3);
+      for (let i = 0; i < nearCount * 3; i += 3) {
+        nearPos[i] = (Math.random() - 0.5) * 24;
+        nearPos[i + 1] = (Math.random() - 0.5) * 18;
+        nearPos[i + 2] = (Math.random() - 0.5) * 14;
+      }
+      nearGeo.setAttribute('position', new THREE.BufferAttribute(nearPos, 3));
+      const nearMat = new THREE.PointsMaterial({
+        color: 0xf4f4f5,
+        size: 0.08,
+        transparent: true,
+        opacity: 0.8
+      });
+      nearStars = new THREE.Points(nearGeo, nearMat);
+      scene.add(nearStars);
+
       const onDown = (clientX, clientY) => {
         isDragging = true;
         prevMouse = { x: clientX, y: clientY };
@@ -632,9 +621,8 @@
       }, { passive: true });
       wrapper.addEventListener('touchend', onUp);
 
-      // Resize Handling
       window.addEventListener('resize', () => {
-        if (!wrapper) return;
+        if (!wrapper || !renderer || !camera) return;
         camera.aspect = wrapper.clientWidth / wrapper.clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
@@ -643,37 +631,39 @@
 
     function animate3D() {
       requestAnimationFrame(animate3D);
+      if (!renderer || !scene || !camera || !starGroup) return;
+
       const elapsed = (Date.now() - reelStartTime) / 1000;
 
-      // Update HUD Timer
       const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
       const secs = String(Math.floor(elapsed % 60)).padStart(2, '0');
       const frames = String(Math.floor((elapsed % 1) * 60)).padStart(2, '0');
       const timerEl = document.getElementById('reel-timer');
       if (timerEl) timerEl.textContent = `${mins}:${secs}:${frames}`;
 
-      // Intro zoom-in burst animation
       if (introBurst > 0.01) {
         introBurst *= 0.94;
         camera.position.z = 8.2 + introBurst * 5.5;
       }
 
-      // Smooth idle cinematic rotation + user drag damping
       if (!isDragging) {
-        targetRotation.y += 0.0065;
+        targetRotation.y += 0.006;
       }
       starGroup.rotation.y += (targetRotation.y - starGroup.rotation.y) * 0.08;
       starGroup.rotation.x += (targetRotation.x - starGroup.rotation.x) * 0.08;
 
-      // Subtle floating levitation
-      starGroup.position.y = Math.sin(elapsed * 1.8) * 0.14;
+      starGroup.position.y = Math.sin(elapsed * 1.6) * 0.16;
 
-      // Pulsing rim light intensity
-      rimLight1.intensity = 4.2 + Math.sin(elapsed * 3) * 1.1;
+      if (rimLight1) {
+        rimLight1.intensity = 3.8 + Math.sin(elapsed * 2.5) * 0.8;
+      }
 
-      // Rotate particle dust slowly
-      if (particleSystem) {
-        particleSystem.rotation.y = elapsed * 0.04;
+      if (farStars) {
+        farStars.rotation.y = elapsed * 0.012;
+        farStars.rotation.x = Math.sin(elapsed * 0.2) * 0.03;
+      }
+      if (nearStars) {
+        nearStars.rotation.y = -elapsed * 0.025;
       }
 
       renderer.render(scene, camera);
@@ -682,29 +672,35 @@
     function replayReel() {
       reelStartTime = Date.now();
       introBurst = 1.0;
-      targetRotation = { x: 0.08, y: starGroup.rotation.y + Math.PI * 2 };
-      showToast("Replay de la séquence 3D ASTRON");
+      if (starGroup) {
+        targetRotation = { x: 0.08, y: starGroup.rotation.y + Math.PI * 2 };
+      }
+      showToast("Replay de la séquence spatiale ASTRON");
     }
 
     function toggleVibe() {
       vibeMode = (vibeMode + 1) % 2;
-      const ring = starGroup.getObjectByName("orbitalRing");
+      const ring = starGroup ? starGroup.getObjectByName("orbitalRing") : null;
       const label = document.getElementById("vibe-label");
 
       if (vibeMode === 0) {
-        rimLight1.color.setHex(0xdc2626);
-        particleSystem.material.color.setHex(0xdc2626);
-        if (ring) ring.material.color.setHex(0xdc2626);
-        label.textContent = "CRIMSON ECLIPSE";
-        label.className = "text-crimson font-bold";
+        if (rimLight1) rimLight1.color.setHex(0xe4e4e7);
+        if (nearStars) nearStars.material.color.setHex(0xf4f4f5);
+        if (ring) ring.material.color.setHex(0xa1a1aa);
+        if (label) {
+          label.textContent = "TITANIUM SILVER";
+          label.className = "text-zinc-200 font-bold";
+        }
       } else {
-        rimLight1.color.setHex(0x94a3b8);
-        particleSystem.material.color.setHex(0xe4e4e7);
-        if (ring) ring.material.color.setHex(0xe4e4e7);
-        label.textContent = "STEALTH CHROME";
-        label.className = "text-chrome font-bold";
+        if (rimLight1) rimLight1.color.setHex(0x9ca3af);
+        if (nearStars) nearStars.material.color.setHex(0xd4d4d8);
+        if (ring) ring.material.color.setHex(0x71717a);
+        if (label) {
+          label.textContent = "GRAPHITE ASH";
+          label.className = "text-zinc-400 font-bold";
+        }
       }
-      showToast(`Ambiance : ${label.textContent}`);
+      if (label) showToast(`Nuance spatiale : ${label.textContent}`);
     }
 
     /* ==========================================================================
@@ -764,7 +760,6 @@
       "vortex-leggings": "M"
     };
 
-    // Generates bespoke dark-luxury SVG apparel artwork matching the uploaded shirt
     function getApparelSVG(type) {
       if (type === "tee") {
         return `
@@ -776,38 +771,32 @@
               <stop offset="100%" stop-color="#060608"/>
             </linearGradient>
             <linearGradient id="tribalGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#4b4b54"/>
-              <stop offset="100%" stop-color="#222228"/>
+              <stop offset="0%" stop-color="#52525b"/>
+              <stop offset="100%" stop-color="#27272a"/>
             </linearGradient>
             <linearGradient id="chestStar" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#52525b"/>
+              <stop offset="0%" stop-color="#71717a"/>
               <stop offset="50%" stop-color="#27272a"/>
               <stop offset="100%" stop-color="#09090b"/>
             </linearGradient>
           </defs>
-          <!-- Main Compression T-Shirt Silhouette (V-Taper) -->
           <path d="M115 36 Q160 54 205 36 L262 62 L292 128 L250 144 L234 114 L222 308 Q160 318 98 308 L86 114 L70 144 L28 128 L58 62 Z"
                 fill="url(#shirtBase)" stroke="#27272a" stroke-width="1.5"/>
-          <!-- Collar Ribbing -->
           <path d="M115 36 Q160 62 205 36 Q160 50 115 36 Z" fill="#09090b" stroke="#3f3f46" stroke-width="1.2"/>
-          <!-- Left Shoulder Tribal Flame Graphics (Matching Reference Photo) -->
           <path d="M114 38 L58 62 L32 124 L68 138 L85 110 C92 85 104 58 114 38 Z" fill="url(#tribalGrad)" opacity="0.65"/>
           <path d="M98 48 C82 65 72 82 55 95 C72 88 86 78 96 68 C84 85 68 102 45 114 C68 108 82 96 92 86 Z" fill="#111115"/>
-          <!-- Right Shoulder Tribal Flame Graphics -->
           <path d="M206 38 L262 62 L288 124 L252 138 L235 110 C228 85 216 58 206 38 Z" fill="url(#tribalGrad)" opacity="0.65"/>
           <path d="M222 48 C238 65 248 82 265 95 C248 88 234 78 224 68 C236 85 252 102 275 114 C252 108 238 96 228 86 Z" fill="#111115"/>
-          <!-- Muscle Compression Shading -->
           <path d="M108 125 Q134 142 156 122" stroke="#27272a" stroke-width="1.5" fill="none" opacity="0.6"/>
           <path d="M212 125 Q186 142 164 122" stroke="#27272a" stroke-width="1.5" fill="none" opacity="0.6"/>
           <path d="M104 205 Q160 218 216 205" stroke="#1f1f25" stroke-width="1.2" fill="none"/>
           <path d="M102 235 Q160 248 218 235" stroke="#1f1f25" stroke-width="1.2" fill="none"/>
           <path d="M100 265 Q160 278 220 265" stroke="#1f1f25" stroke-width="1.2" fill="none"/>
-          <!-- Signature 3D Gothic Elongated 4-Point Star on Chest -->
           <g transform="translate(160, 118) scale(0.78)">
             <path d="M0 -34 C2 -8, 5 -4, 32 0 C5 4, 2 8, 0 52 C-2 8, -5 4, -32 0 C-5 -4, -2 -8, 0 -34 Z"
-                  fill="url(#chestStar)" stroke="#71717a" stroke-width="0.9"/>
+                  fill="url(#chestStar)" stroke="#a1a1aa" stroke-width="0.9"/>
             <path d="M0 57 C2 64, 4 66, 7 68 C3 70, 1 76, 0 98 C-1 76, -3 70, -7 68 C-4 66, -2 64, 0 57 Z"
-                  fill="url(#chestStar)" stroke="#71717a" stroke-width="0.8"/>
+                  fill="url(#chestStar)" stroke="#a1a1aa" stroke-width="0.8"/>
           </g>
         </svg>`;
       }
@@ -822,27 +811,22 @@
               <stop offset="100%" stop-color="#050507"/>
             </linearGradient>
           </defs>
-          <!-- Long Sleeve Compression Silhouette -->
           <path d="M116 36 Q160 54 204 36 L262 60 L296 245 L270 250 L234 114 L222 308 Q160 318 98 308 L86 114 L50 250 L24 245 L58 60 Z"
                 fill="url(#lsBase)" stroke="#27272a" stroke-width="1.5"/>
           <path d="M116 36 Q160 62 204 36 Q160 50 116 36 Z" fill="#09090b" stroke="#3f3f46" stroke-width="1.2"/>
-          <!-- Raglan Seam Lines -->
           <path d="M116 36 L86 114" stroke="#3f3f46" stroke-width="1.2" stroke-dasharray="3 2"/>
           <path d="M204 36 L234 114" stroke="#3f3f46" stroke-width="1.2" stroke-dasharray="3 2"/>
-          <!-- Crimson Wrist Accents -->
-          <line x1="25" y1="240" x2="51" y2="245" stroke="#dc2626" stroke-width="2"/>
-          <line x1="295" y1="240" x2="269" y2="245" stroke="#dc2626" stroke-width="2"/>
-          <!-- Chest Star Emblem -->
+          <line x1="25" y1="240" x2="51" y2="245" stroke="#a1a1aa" stroke-width="2"/>
+          <line x1="295" y1="240" x2="269" y2="245" stroke="#a1a1aa" stroke-width="2"/>
           <g transform="translate(160, 118) scale(0.75)">
             <path d="M0 -34 C2 -8, 5 -4, 32 0 C5 4, 2 8, 0 52 C-2 8, -5 4, -32 0 C-5 -4, -2 -8, 0 -34 Z"
-                  fill="#27272a" stroke="#a1a1aa" stroke-width="1"/>
+                  fill="#27272a" stroke="#d4d4d8" stroke-width="1"/>
             <path d="M0 57 C2 64, 4 66, 7 68 C3 70, 1 76, 0 98 C-1 76, -3 70, -7 68 C-4 66, -2 64, 0 57 Z"
-                  fill="#27272a" stroke="#a1a1aa" stroke-width="0.9"/>
+                  fill="#27272a" stroke="#d4d4d8" stroke-width="0.9"/>
           </g>
         </svg>`;
       }
 
-      // Compression Leggings SVG
       return `
       <svg viewBox="0 0 320 340" class="w-full h-full drop-shadow-[0_18px_25px_rgba(0,0,0,0.9)]">
         <defs>
@@ -851,33 +835,31 @@
             <stop offset="100%" stop-color="#070709"/>
           </linearGradient>
         </defs>
-        <!-- Compression Leggings Silhouette -->
         <path d="M104 34 L216 34 L228 135 L214 312 L184 312 L160 148 L136 312 L106 312 L92 135 Z"
               fill="url(#legBase)" stroke="#27272a" stroke-width="1.5"/>
-        <!-- Waistband -->
         <rect x="103" y="34" width="114" height="18" rx="2" fill="#121216" stroke="#3f3f46" stroke-width="1.2"/>
         <text x="160" y="46" text-anchor="middle" fill="#a1a1aa" font-size="8" font-family="sans-serif" letter-spacing="3" font-weight="bold">ASTRON</text>
-        <!-- Thigh Gothic Star -->
         <g transform="translate(192, 118) scale(0.45)">
           <path d="M0 -34 C2 -8, 5 -4, 32 0 C5 4, 2 8, 0 52 C-2 8, -5 4, -32 0 C-5 -4, -2 -8, 0 -34 Z"
-                fill="#27272a" stroke="#dc2626" stroke-width="1.5"/>
+                fill="#27272a" stroke="#d4d4d8" stroke-width="1.5"/>
           <path d="M0 57 C2 64, 4 66, 7 68 C3 70, 1 76, 0 98 C-1 76, -3 70, -7 68 C-4 66, -2 64, 0 57 Z"
-                fill="#27272a" stroke="#dc2626" stroke-width="1.3"/>
+                fill="#27272a" stroke="#d4d4d8" stroke-width="1.3"/>
         </g>
       </svg>`;
     }
 
     function renderProducts() {
       const grid = document.getElementById('products-grid');
+      if (!grid) return;
+
       grid.innerHTML = products.map(prod => `
         <article class="obsidian-card rounded-3xl overflow-hidden flex flex-col justify-between group">
           <div>
-            <!-- Visual Showcase Area -->
-            <div class="relative h-80 bg-[radial-gradient(circle_at_center,#1d1d24_0%,#09090c_85%)] p-6 flex items-center justify-center overflow-hidden border-b border-zinc-800/80">
-              <span class="absolute top-4 left-4 bg-black/80 backdrop-blur-md border border-zinc-800 text-chrome text-[10px] font-grotesk font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+            <div class="relative h-80 bg-[radial-gradient(circle_at_center,#1d2028_0%,#090a0e_85%)] p-6 flex items-center justify-center overflow-hidden border-b border-zinc-800/80">
+              <span class="absolute top-4 left-4 bg-black/80 backdrop-blur-md border border-zinc-700 text-chrome text-[10px] font-grotesk font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full">
                 ${prod.tag}
               </span>
-              <button onclick="openQuickView('${prod.id}')" class="absolute top-4 right-4 bg-black/70 hover:bg-crimson text-zinc-300 hover:text-white border border-zinc-800 hover:border-crimson text-[10px] font-grotesk uppercase tracking-wider px-3 py-1 rounded-full transition cursor-pointer">
+              <button type="button" onclick="openQuickView('${prod.id}')" class="absolute top-4 right-4 bg-black/70 hover:bg-zinc-200 text-zinc-300 hover:text-obsidian border border-zinc-700 text-[10px] font-grotesk uppercase tracking-wider px-3 py-1 rounded-full transition cursor-pointer">
                 Tech Specs
               </button>
               <div class="w-60 h-64 transition-transform duration-500 group-hover:scale-105">
@@ -885,7 +867,6 @@
               </div>
             </div>
 
-            <!-- Product Info -->
             <div class="p-6 pb-4">
               <div class="flex items-start justify-between gap-2 mb-1.5">
                 <h3 class="font-display text-xl font-bold text-white leading-tight">${prod.name}</h3>
@@ -893,7 +874,6 @@
               </div>
               <p class="text-zinc-400 text-xs mb-5">${prod.subtitle}</p>
 
-              <!-- Size Selector -->
               <div class="mb-2">
                 <div class="flex items-center justify-between text-[11px] font-grotesk uppercase tracking-wider text-zinc-400 mb-2">
                   <span>Taille (Compression)</span>
@@ -904,7 +884,7 @@
                     <button type="button" onclick="selectProductSize('${prod.id}', '${size}')"
                       class="py-2.5 rounded-xl text-xs font-grotesk font-bold transition cursor-pointer border ${
                         selectedSizes[prod.id] === size
-                          ? 'bg-crimson/20 border-crimson text-white shadow-sm shadow-crimson/20'
+                          ? 'bg-zinc-200/15 border-zinc-300 text-white shadow-sm'
                           : 'bg-obsidian border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-white'
                       }">
                       ${size}
@@ -915,9 +895,8 @@
             </div>
           </div>
 
-          <!-- Add to Cart CTA -->
           <div class="p-6 pt-2">
-            <button onclick="addToCart('${prod.id}')"
+            <button type="button" onclick="addToCart('${prod.id}')"
               class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-3.5 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
               <span>Ajouter au Panier</span>
               <span class="text-zinc-500">• ${selectedSizes[prod.id]}</span>
@@ -953,14 +932,14 @@
           <ul class="space-y-2 text-xs text-zinc-300">
             ${prod.features.map(f => `
               <li class="flex items-start gap-2">
-                <span class="text-crimson font-bold">✦</span>
+                <span class="text-zinc-300 font-bold">✦</span>
                 <span>${f}</span>
               </li>
             `).join('')}
           </ul>
           <div class="pt-2">
-            <button onclick="addToCart('${prod.id}'); closeQuickView();"
-              class="w-full bg-crimson hover:bg-red-700 text-white font-grotesk font-bold text-xs uppercase tracking-widest py-3.5 rounded-xl transition cursor-pointer">
+            <button type="button" onclick="addToCart('${prod.id}'); closeQuickView();"
+              class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-widest py-3.5 rounded-xl transition cursor-pointer">
               Ajouter (${selectedSizes[prod.id]}) — ${prod.price} TND
             </button>
           </div>
@@ -974,6 +953,7 @@
 
     function closeQuickView() {
       const modal = document.getElementById('quickview-modal');
+      if (!modal) return;
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
@@ -989,10 +969,10 @@
       const comfBtn = document.getElementById('fit-comfort');
 
       if (pref === 'pro') {
-        proBtn.className = "fit-pref-btn bg-crimson/20 border border-crimson text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
+        proBtn.className = "fit-pref-btn bg-zinc-200/15 border border-zinc-300 text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
         comfBtn.className = "fit-pref-btn bg-obsidian border border-zinc-800 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
       } else {
-        comfBtn.className = "fit-pref-btn bg-crimson/20 border border-crimson text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
+        comfBtn.className = "fit-pref-btn bg-zinc-200/15 border border-zinc-300 text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
         proBtn.className = "fit-pref-btn bg-obsidian border border-zinc-800 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
       }
     }
@@ -1007,12 +987,12 @@
       }
 
       const sizes = ['S', 'M', 'L', 'XL'];
-      let idx = 1; // Default M
+      let idx = 1;
 
-      if (w < 65 && h < 174) idx = 0; // S
-      else if (w <= 76 && h <= 181) idx = 1; // M
-      else if (w <= 87 && h <= 188) idx = 2; // L
-      else idx = 3; // XL
+      if (w < 65 && h < 174) idx = 0;
+      else if (w <= 76 && h <= 181) idx = 1;
+      else if (w <= 87 && h <= 188) idx = 2;
+      else idx = 3;
 
       if (fitPreference === 'comfort' && idx < 3) {
         idx += 1;
@@ -1027,7 +1007,6 @@
 
       document.getElementById('size-result').classList.remove('hidden');
 
-      // Auto-select recommended size across products for convenience
       Object.keys(selectedSizes).forEach(k => selectedSizes[k] = recommended);
       renderProducts();
       showToast(`Taille ${recommended} appliquée à la collection !`);
@@ -1040,7 +1019,9 @@
 
     function addToCart(prodId) {
       const prod = products.find(p => p.id === prodId);
-      const size = selectedSizes[prodId];
+      if (!prod) return;
+
+      const size = selectedSizes[prodId] || "M";
       const existing = cart.find(item => item.id === prodId && item.size === size);
 
       if (existing) {
@@ -1056,12 +1037,18 @@
         });
       }
 
+      const receipt = document.getElementById('order-receipt');
+      const checkoutSection = document.getElementById('checkout-section');
+      if (receipt) receipt.classList.add('hidden');
+      if (checkoutSection) checkoutSection.classList.remove('hidden');
+
       updateCartUI();
       toggleCart(true);
       showToast(`${prod.name} (${size}) ajouté`);
     }
 
     function updateQty(index, delta) {
+      if (!cart[index]) return;
       cart[index].qty += delta;
       if (cart[index].qty <= 0) {
         cart.splice(index, 1);
@@ -1083,13 +1070,14 @@
         container.innerHTML = `
           <div class="text-center py-16 space-y-3">
             <p class="text-zinc-500 text-sm">Votre panier ASTRON est vide.</p>
-            <button onclick="toggleCart(false)" class="text-xs font-grotesk uppercase tracking-widest text-crimson underline cursor-pointer">
+            <button type="button" onclick="toggleCart(false)" class="text-xs font-grotesk uppercase tracking-widest text-zinc-300 underline cursor-pointer">
               Découvrir la collection
             </button>
           </div>
         `;
         subtotalEl.textContent = "0 TND";
         shippingEl.textContent = "7 TND";
+        shippingEl.className = "text-zinc-400";
         totalEl.textContent = "0 TND";
         freeBar.textContent = "Livraison gratuite dès 150 TND";
         return;
@@ -1104,9 +1092,9 @@
             <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
             <p class="text-[11px] text-zinc-400 mt-0.5">Taille: <span class="text-white font-bold">${item.size}</span> • ${item.price} TND</p>
             <div class="flex items-center gap-2 mt-2">
-              <button onclick="updateQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer">-</button>
+              <button type="button" onclick="updateQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer">-</button>
               <span class="text-xs font-bold px-1">${item.qty}</span>
-              <button onclick="updateQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer">+</button>
+              <button type="button" onclick="updateQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer">+</button>
             </div>
           </div>
           <div class="text-right font-grotesk font-bold text-sm text-white">
@@ -1133,6 +1121,7 @@
 
     function toggleCart(open) {
       const drawer = document.getElementById('cart-drawer');
+      if (!drawer) return;
       if (open) {
         drawer.classList.remove('hidden');
         drawer.classList.add('flex');
@@ -1154,22 +1143,21 @@
       submitBtn.textContent = "ENVOI EN COURS...";
       submitBtn.disabled = true;
 
-      const name = document.getElementById('cust-name').value.trim();
-      const phone = document.getElementById('cust-phone').value.trim();
-      const gov = document.getElementById('cust-gov').value;
-      const address = document.getElementById('cust-address').value.trim();
+      try {
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+        const gov = document.getElementById('cust-gov').value;
+        const address = document.getElementById('cust-address').value.trim();
 
-      const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-      const shipping = subtotal >= 150 ? 0 : 7;
-      const total = subtotal + shipping;
-      const orderRef = "AST-" + Math.floor(100000 + Math.random() * 900000);
+        const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const shipping = subtotal >= 150 ? 0 : 7;
+        const total = subtotal + shipping;
+        const orderRef = "AST-" + Math.floor(100000 + Math.random() * 900000);
 
-      const itemsSheetString = cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(" | ");
-      const itemsSummary = cart.map(i => `• ${i.qty}x ${i.name} (${i.size})`).join('<br>');
+        const itemsSheetString = cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(" | ");
+        const itemsSummary = cart.map(i => `• ${i.qty}x ${i.name} (${i.size})`).join('<br>');
 
-      // Send order to Google Sheets if webhook URL is configured
-      if (GOOGLE_SHEET_WEBHOOK_URL && !GOOGLE_SHEET_WEBHOOK_URL.includes("حط_هنا_رابط")) {
-        try {
+        if (GOOGLE_SHEET_WEBHOOK_URL && !GOOGLE_SHEET_WEBHOOK_URL.includes("حط_هنا_رابط")) {
           await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
             method: "POST",
             mode: "no-cors",
@@ -1183,28 +1171,31 @@
               total
             })
           });
-        } catch (err) {
-          console.error("Google Sheets sync error:", err);
         }
+
+        document.getElementById('receipt-details').innerHTML = `
+          <p><strong class="text-white">Référence :</strong> ${orderRef}</p>
+          <p><strong class="text-white">Client :</strong> ${name} (${phone})</p>
+          <p><strong class="text-white">Destination :</strong> ${gov} — ${address}</p>
+          <div class="border-t border-zinc-800 my-2 pt-2">${itemsSummary}</div>
+          <p><strong class="text-white">Livraison :</strong> ${shipping === 0 ? "Gratuite" : shipping + " TND"}</p>
+          <p class="text-emerald-400 font-bold pt-1">Total COD : ${total} TND</p>
+        `;
+
+        document.getElementById('checkout-section').classList.add('hidden');
+        document.getElementById('order-receipt').classList.remove('hidden');
+
+        cart = [];
+        updateCartUI();
+        document.getElementById('cod-form').reset();
+        showToast(`Commande ${orderRef} enregistrée !`);
+      } catch (err) {
+        console.error("Google Sheets sync error:", err);
+        showToast("Erreur lors de l'envoi. Veuillez réessayer.");
+      } finally {
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
       }
-
-      document.getElementById('receipt-details').innerHTML = `
-        <p><strong class="text-white">Référence :</strong> ${orderRef}</p>
-        <p><strong class="text-white">Client :</strong> ${name} (${phone})</p>
-        <p><strong class="text-white">Destination :</strong> ${gov} — ${address}</p>
-        <div class="border-t border-zinc-800 my-2 pt-2">${itemsSummary}</div>
-        <p class="text-sm font-bold text-white pt-1">Total COD à la livraison : <span class="text-crimson">${total} TND</span></p>
-        <p class="text-zinc-400 pt-1">Notre équipe vous appellera sous 24h pour confirmer l'expédition.</p>
-      `;
-
-      document.getElementById('order-receipt').classList.remove('hidden');
-      document.getElementById('checkout-section').classList.add('hidden');
-      cart = [];
-      updateCartUI();
-      e.target.reset();
-      submitBtn.textContent = originalBtnText;
-      submitBtn.disabled = false;
-      showToast("Commande confirmée avec succès !");
     }
 
     function resetAfterReceipt() {
@@ -1214,22 +1205,34 @@
     }
 
     /* ==========================================================================
-       6. CUSTOM TOAST NOTIFICATION
+       6. TOAST NOTIFICATIONS & PAGE INITIALIZATION
        ========================================================================== */
     let toastTimeout;
+
     function showToast(message) {
       const box = document.getElementById('toast-box');
       const msg = document.getElementById('toast-msg');
+      if (!box || !msg) return;
+
       msg.textContent = message;
       box.classList.remove('translate-y-24', 'opacity-0');
+      box.classList.add('translate-y-0', 'opacity-100');
+
       clearTimeout(toastTimeout);
       toastTimeout = setTimeout(() => {
+        box.classList.remove('translate-y-0', 'opacity-100');
         box.classList.add('translate-y-24', 'opacity-0');
-      }, 3000);
+      }, 2800);
     }
 
-    // Initialize everything on load
-    window.addEventListener('load', () => {
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeQuickView();
+        toggleCart(false);
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
       init3DHero();
       animate3D();
       renderProducts();
