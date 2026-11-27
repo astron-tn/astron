@@ -124,19 +124,13 @@
         <a href="#size-finder" class="hover:text-white transition">Size Finder</a>
       </nav>
 
-      <div class="flex items-center gap-2.5">
-        <button type="button" onclick="openDiagnosticModal()" class="hidden sm:inline-flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/25 px-3.5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider text-zinc-300 hover:text-white transition cursor-pointer">
-          <span>Photo Status</span>
-        </button>
-
-        <button type="button" onclick="toggleCart(true)" class="relative flex items-center gap-2.5 bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/25 px-4 py-2.5 rounded-xl transition cursor-pointer">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
-          <span class="text-xs font-grotesk uppercase tracking-widest font-semibold hidden sm:inline">Panier</span>
-          <span id="cart-badge" class="bg-white text-obsidian text-xs font-bold px-2 py-0.5 rounded-full">0</span>
-        </button>
-      </div>
+      <button type="button" onclick="toggleCart(true)" class="relative flex items-center gap-2.5 bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/25 px-4 py-2.5 rounded-xl transition cursor-pointer">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span class="text-xs font-grotesk uppercase tracking-widest font-semibold hidden sm:inline">Panier</span>
+        <span id="cart-badge" class="bg-white text-obsidian text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+      </button>
     </div>
   </header>
 
@@ -221,7 +215,7 @@
       <div class="lg:col-span-6 perspective-1200">
         <div id="stage-3d-card" onmousemove="tiltStageCard(event)" onmouseleave="resetStageCard()"
              class="relative h-[450px] sm:h-[510px] rounded-2xl bg-[#080a0e] border border-white/10 overflow-hidden select-none shadow-2xl">
-          <div id="stage-visual-box" class="w-full h-full"></div>
+          <img id="stage-photo" src="./tee-front.jpg" alt="Obsidian Tribal Compression Tee" class="w-full h-full object-cover" />
           <div class="absolute top-4 left-4 bg-black/70 backdrop-blur-md border border-white/10 text-zinc-200 text-[10px] font-grotesk uppercase tracking-[0.22em] px-3 py-1.5 rounded-full pointer-events-none">
             ASTRON STUDIO
           </div>
@@ -399,23 +393,6 @@
     </div>
   </footer>
 
-  <!-- DIAGNOSTIC MODAL -->
-  <div id="diagnostic-modal" onclick="if(event.target===this) closeDiagnosticModal()" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="obsidian-card max-w-xl w-full rounded-3xl overflow-hidden shadow-2xl border border-white/15">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
-        <span class="font-grotesk text-xs uppercase tracking-[0.22em] text-zinc-300 font-bold">PHOTO DIAGNOSTIC</span>
-        <button type="button" onclick="closeDiagnosticModal()" class="text-zinc-400 hover:text-white text-2xl leading-none cursor-pointer">&times;</button>
-      </div>
-      <div class="p-6 space-y-4">
-        <p id="diag-page-url" class="text-[11px] text-zinc-400 break-all"></p>
-        <div id="diag-list" class="space-y-2.5 text-xs"></div>
-        <button type="button" onclick="runPhotoDiagnostic()" class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-3 rounded-xl transition cursor-pointer">
-          Re-tester les 4 photos
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- QUICK VIEW MODAL -->
   <div id="quickview-modal" onclick="if(event.target===this) closeQuickView()" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
     <div class="obsidian-card max-w-2xl w-full rounded-3xl overflow-hidden shadow-2xl border border-white/15">
@@ -525,167 +502,14 @@
     const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz-HK9ycbWOxzcIS8P7OUDOmA6mb3kElxzMTHfTfYY2TWuxMmEJt28ynPirMy2zYK6y/exec";
 
     /* ==========================================================================
-       SMART PHOTO RESOLVER + DIAGNOSTIC TOOL
+       PHOTO ASSETS (4 FILES IN REPOSITORY ROOT)
        ========================================================================== */
-    const MEDIA_BASES = {
-      teeFront: "tee-front",
-      teeBack: "tee-back",
-      crewneck: "crewneck",
-      jacket: "jacket"
+    const PHOTOS = {
+      teeFront: "./tee-front.jpg",
+      teeBack: "./tee-back.jpg",
+      crewneck: "./crewneck.jpg",
+      jacket: "./jacket.jpg"
     };
-
-    const resolvedPhotoCache = {};
-
-    function buildNameVariants(slug) {
-      const lower = slug.toLowerCase();
-      const title = lower
-        .split("-")
-        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-        .join("-");
-      const upper = lower.toUpperCase();
-      return Array.from(new Set([lower, title, upper]));
-    }
-
-    function getCandidateUrls(slug) {
-      const variants = buildNameVariants(slug);
-      const folders = ["./", "images/", "./images/", "assets/", "./assets/", "img/", "./img/"];
-      const exts = [".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG", ".WEBP", ""];
-      const urls = [];
-
-      for (const folder of folders) {
-        for (const name of variants) {
-          for (const ext of exts) {
-            urls.push(`${folder}${name}${ext}`);
-          }
-        }
-      }
-      return Array.from(new Set(urls));
-    }
-
-    function probeAndCachePhoto(slug) {
-      if (resolvedPhotoCache[slug]) return Promise.resolve(resolvedPhotoCache[slug]);
-      const candidates = getCandidateUrls(slug);
-
-      return new Promise(resolve => {
-        let index = 0;
-
-        function tryNext() {
-          if (index >= candidates.length) {
-            resolve(null);
-            return;
-          }
-          const url = candidates[index++];
-          const tester = new Image();
-          tester.onload = () => {
-            resolvedPhotoCache[slug] = url;
-            resolve(url);
-          };
-          tester.onerror = tryNext;
-          tester.src = url;
-        }
-
-        tryNext();
-      });
-    }
-
-    function handleSmartImgError(imgEl) {
-      const list = (imgEl.dataset.candidates || "").split("|").filter(Boolean);
-      const nextIdx = parseInt(imgEl.dataset.cIdx || "0", 10) + 1;
-      if (nextIdx < list.length) {
-        imgEl.dataset.cIdx = String(nextIdx);
-        imgEl.src = list[nextIdx];
-      } else {
-        imgEl.style.opacity = "0.2";
-      }
-    }
-
-    function getSmartPhotoHTML(slug, altText, extraClass = "w-full h-full object-cover") {
-      const cached = resolvedPhotoCache[slug];
-      const candidates = getCandidateUrls(slug);
-      const initialSrc = cached || candidates[0];
-      return `
-        <img src="${initialSrc}"
-             data-slug="${slug}"
-             data-candidates="${candidates.join('|')}"
-             data-c-idx="0"
-             alt="${altText}"
-             class="${extraClass}"
-             onload="if(this.dataset.slug) resolvedPhotoCache[this.dataset.slug] = this.currentSrc;"
-             onerror="handleSmartImgError(this)" />
-      `;
-    }
-
-    async function preloadAllBrandPhotos() {
-      const slugs = Object.values(MEDIA_BASES);
-      await Promise.all(slugs.map(slug => probeAndCachePhoto(slug)));
-      renderStage3D();
-      renderProducts();
-      updateCartUI();
-    }
-
-    function openDiagnosticModal() {
-      const modal = document.getElementById('diagnostic-modal');
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      runPhotoDiagnostic();
-    }
-
-    function closeDiagnosticModal() {
-      const modal = document.getElementById('diagnostic-modal');
-      if (!modal) return;
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    async function runPhotoDiagnostic() {
-      const urlEl = document.getElementById('diag-page-url');
-      const listEl = document.getElementById('diag-list');
-      if (urlEl) urlEl.textContent = "URL : " + window.location.href;
-      if (!listEl) return;
-
-      const entries = Object.entries(MEDIA_BASES);
-      listEl.innerHTML = entries.map(([key, slug]) => `
-        <div class="bg-obsidian border border-white/10 rounded-xl p-3 flex items-center justify-between gap-3">
-          <span class="font-bold text-white">${key} (${slug})</span>
-          <span class="text-zinc-400">Checking...</span>
-        </div>
-      `).join('');
-
-      const rows = await Promise.all(entries.map(async ([key, slug]) => {
-        delete resolvedPhotoCache[slug];
-        const found = await probeAndCachePhoto(slug);
-        return { key, slug, found };
-      }));
-
-      listEl.innerHTML = rows.map(r => `
-        <div class="bg-obsidian border border-white/10 rounded-xl p-3 flex items-center justify-between gap-3">
-          <div class="min-w-0">
-            <div class="font-bold text-white">${keyLabel(r.key)} <span class="text-zinc-500 font-normal">(${r.slug})</span></div>
-            <div class="text-[11px] text-zinc-400 truncate">${r.found ? "Loaded from: " + r.found : "No matching file found"}</div>
-          </div>
-          <span class="px-2.5 py-1 rounded-lg font-bold text-[10px] uppercase ${
-            r.found
-              ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-              : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
-          }">
-            ${r.found ? "OK" : "NOT FOUND"}
-          </span>
-        </div>
-      `).join('');
-
-      renderStage3D();
-      renderProducts();
-      updateCartUI();
-    }
-
-    function keyLabel(key) {
-      if (key === "teeFront") return "Tee Front";
-      if (key === "teeBack") return "Tee Back";
-      if (key === "crewneck") return "Crewneck";
-      if (key === "jacket") return "Jacket";
-      return key;
-    }
 
     /* ==========================================================================
        1. THREE.JS 3D STAR & 1300 STARS SPACE BACKGROUND
@@ -902,8 +726,8 @@
         tag: "BEST SELLER",
         gsm: "250 GSM",
         composition: "78% Nylon Tactel, 22% Élasthanne",
-        frontSlug: MEDIA_BASES.teeFront,
-        backSlug: MEDIA_BASES.teeBack,
+        frontSrc: PHOTOS.teeFront,
+        backSrc: PHOTOS.teeBack,
         features: [
           "Motifs tribaux gris anthracite sur les épaules et le dos",
           "Étoile métallique signature sur la poitrine et le haut du dos",
@@ -918,8 +742,8 @@
         tag: "DROP 01",
         gsm: "340 GSM",
         composition: "80% Coton Lourd, 20% Polyester",
-        frontSlug: MEDIA_BASES.crewneck,
-        backSlug: MEDIA_BASES.crewneck,
+        frontSrc: PHOTOS.crewneck,
+        backSrc: PHOTOS.crewneck,
         features: [
           "Bandes latérales et manches gris anthracite intégrées",
           "Étoile ASTRON détaillée au centre de la poitrine",
@@ -934,8 +758,8 @@
         tag: "LIMITED",
         gsm: "380 GSM",
         composition: "100% Polaire Bouclée Haute Densité",
-        frontSlug: MEDIA_BASES.jacket,
-        backSlug: MEDIA_BASES.jacket,
+        frontSrc: PHOTOS.jacket,
+        backSrc: PHOTOS.jacket,
         features: [
           "Matière noire texturée avec zip frontal et poches zippées",
           "Bandes gris anthracite sur les manches et étoile poitrine",
@@ -958,7 +782,7 @@
        ========================================================================== */
     function renderStage3D() {
       const prod = products.find(p => p.id === activeStageProductId) || products[0];
-      const visualBox = document.getElementById('stage-visual-box');
+      const photoEl = document.getElementById('stage-photo');
       const titleEl = document.getElementById('stage-title');
       const priceEl = document.getElementById('stage-price-label');
       const angleLabel = document.getElementById('stage-angle-label');
@@ -966,12 +790,13 @@
       const frontBtn = document.getElementById('btn-view-front');
       const backBtn = document.getElementById('btn-view-back');
 
-      if (!visualBox || !titleEl || !priceEl) return;
+      if (!photoEl || !titleEl || !priceEl) return;
 
-      const chosenSlug = activeStageAngle === "back" ? prod.backSlug : prod.frontSlug;
+      const chosenSrc = activeStageAngle === "back" ? prod.backSrc : prod.frontSrc;
+      photoEl.src = chosenSrc;
+      photoEl.alt = prod.name;
       titleEl.textContent = prod.name;
       priceEl.textContent = `${prod.price} TND`;
-      visualBox.innerHTML = getSmartPhotoHTML(chosenSlug, prod.name, "w-full h-full object-cover");
 
       if (angleLabel) {
         angleLabel.textContent = activeStageAngle === "back" ? "VUE DOS" : "VUE FACE";
@@ -1061,7 +886,7 @@
                 <button type="button" onclick="openQuickView('${prod.id}')" class="absolute top-4 right-4 z-10 bg-black/70 hover:bg-white text-zinc-200 hover:text-obsidian border border-white/15 text-[10px] font-grotesk uppercase tracking-wider px-3 py-1 rounded-full transition cursor-pointer">
                   Détails
                 </button>
-                ${getSmartPhotoHTML(prod.frontSlug, prod.name, "w-full h-full object-cover transition duration-500 hover:scale-105")}
+                <img src="${prod.frontSrc}" alt="${prod.name}" class="w-full h-full object-cover transition duration-500 hover:scale-105" />
               </div>
 
               <div class="p-6 pb-4">
@@ -1118,7 +943,7 @@
       const content = document.getElementById('quickview-content');
       content.innerHTML = `
         <div class="bg-obsidian rounded-2xl border border-white/10 h-64 overflow-hidden">
-          ${getSmartPhotoHTML(prod.frontSlug, prod.name, "w-full h-full object-cover")}
+          <img src="${prod.frontSrc}" alt="${prod.name}" class="w-full h-full object-cover" />
         </div>
         <div class="space-y-4">
           <h4 class="font-display text-2xl font-bold text-white">${prod.name}</h4>
@@ -1222,7 +1047,7 @@
           name: prod.name,
           price: prod.price,
           size: size,
-          frontSlug: prod.frontSlug,
+          frontSrc: prod.frontSrc,
           qty: 1
         });
       }
@@ -1274,7 +1099,7 @@
       container.innerHTML = cart.map((item, idx) => `
         <div class="bg-obsidian border border-white/10 p-3.5 rounded-2xl flex items-center gap-3.5">
           <div class="w-14 h-16 bg-carbon rounded-xl flex-shrink-0 overflow-hidden">
-            ${getSmartPhotoHTML(item.frontSlug, item.name, "w-full h-full object-cover")}
+            <img src="${item.frontSrc}" alt="${item.name}" class="w-full h-full object-cover" />
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
@@ -1412,7 +1237,6 @@
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeQuickView();
-        closeDiagnosticModal();
         toggleCart(false);
       }
     });
@@ -1423,7 +1247,6 @@
       renderStage3D();
       renderProducts();
       updateCartUI();
-      preloadAllBrandPhotos();
     });
   </script>
 </body>
