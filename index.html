@@ -502,23 +502,67 @@
     const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz-HK9ycbWOxzcIS8P7OUDOmA6mb3kElxzMTHfTfYY2TWuxMmEJt28ynPirMy2zYK6y/exec";
 
     /* ==========================================================================
-       SMART PHOTO HELPER
+       SMART PHOTO RESOLVER FOR GITHUB PAGES & LOCAL (CASE + EXTENSION SAFE)
        ========================================================================== */
     const MEDIA_BASES = {
-      teeFront: "./tee-front",
-      teeBack: "./tee-back",
-      crewneck: "./crewneck",
-      jacket: "./jacket"
+      teeFront: "tee-front",
+      teeBack: "tee-back",
+      crewneck: "crewneck",
+      jacket: "jacket"
     };
 
-    function getCandidateUrls(basePath) {
-      return [
-        `${basePath}.jpg`,
-        `${basePath}.jpeg`,
-        `${basePath}.png`,
-        `${basePath}.webp`,
-        `${basePath}`
-      ];
+    const resolvedPhotoCache = {};
+
+    function buildNameVariants(slug) {
+      const lower = slug.toLowerCase();
+      const title = lower
+        .split("-")
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join("-");
+      const upper = lower.toUpperCase();
+      return Array.from(new Set([lower, title, upper]));
+    }
+
+    function getCandidateUrls(slug) {
+      const variants = buildNameVariants(slug);
+      const folders = ["./", "images/", "./images/", "assets/", "./assets/", "img/", "./img/"];
+      const exts = [".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG", ".WEBP", ""];
+      const urls = [];
+
+      for (const folder of folders) {
+        for (const name of variants) {
+          for (const ext of exts) {
+            urls.push(`${folder}${name}${ext}`);
+          }
+        }
+      }
+      return Array.from(new Set(urls));
+    }
+
+    function probeAndCachePhoto(slug) {
+      if (resolvedPhotoCache[slug]) return Promise.resolve(resolvedPhotoCache[slug]);
+      const candidates = getCandidateUrls(slug);
+
+      return new Promise(resolve => {
+        let index = 0;
+
+        function tryNext() {
+          if (index >= candidates.length) {
+            resolve(null);
+            return;
+          }
+          const url = candidates[index++];
+          const tester = new Image();
+          tester.onload = () => {
+            resolvedPhotoCache[slug] = url;
+            resolve(url);
+          };
+          tester.onerror = tryNext;
+          tester.src = url;
+        }
+
+        tryNext();
+      });
     }
 
     function handleSmartImgError(imgEl) {
@@ -532,16 +576,28 @@
       }
     }
 
-    function getSmartPhotoHTML(basePath, altText, extraClass = "w-full h-full object-cover") {
-      const candidates = getCandidateUrls(basePath);
+    function getSmartPhotoHTML(slug, altText, extraClass = "w-full h-full object-cover") {
+      const cached = resolvedPhotoCache[slug];
+      const candidates = getCandidateUrls(slug);
+      const initialSrc = cached || candidates[0];
       return `
-        <img src="${candidates[0]}"
+        <img src="${initialSrc}"
+             data-slug="${slug}"
              data-candidates="${candidates.join('|')}"
              data-c-idx="0"
              alt="${altText}"
              class="${extraClass}"
+             onload="if(this.dataset.slug) resolvedPhotoCache[this.dataset.slug] = this.currentSrc;"
              onerror="handleSmartImgError(this)" />
       `;
+    }
+
+    async function preloadAllBrandPhotos() {
+      const slugs = Object.values(MEDIA_BASES);
+      await Promise.all(slugs.map(slug => probeAndCachePhoto(slug)));
+      renderStage3D();
+      renderProducts();
+      updateCartUI();
     }
 
     /* ==========================================================================
@@ -759,8 +815,8 @@
         tag: "BEST SELLER",
         gsm: "250 GSM",
         composition: "78% Nylon Tactel, 22% Élasthanne",
-        frontBase: MEDIA_BASES.teeFront,
-        backBase: MEDIA_BASES.teeBack,
+        frontSlug: MEDIA_BASES.teeFront,
+        backSlug: MEDIA_BASES.teeBack,
         features: [
           "Motifs tribaux gris anthracite sur les épaules et le dos",
           "Étoile métallique signature sur la poitrine et le haut du dos",
@@ -775,8 +831,8 @@
         tag: "DROP 01",
         gsm: "340 GSM",
         composition: "80% Coton Lourd, 20% Polyester",
-        frontBase: MEDIA_BASES.crewneck,
-        backBase: MEDIA_BASES.crewneck,
+        frontSlug: MEDIA_BASES.crewneck,
+        backSlug: MEDIA_BASES.crewneck,
         features: [
           "Bandes latérales et manches gris anthracite intégrées",
           "Étoile ASTRON détaillée au centre de la poitrine",
@@ -791,8 +847,8 @@
         tag: "LIMITED",
         gsm: "380 GSM",
         composition: "100% Polaire Bouclée Haute Densité",
-        frontBase: MEDIA_BASES.jacket,
-        backBase: MEDIA_BASES.jacket,
+        frontSlug: MEDIA_BASES.jacket,
+        backSlug: MEDIA_BASES.jacket,
         features: [
           "Matière noire texturée avec zip frontal et poches zippées",
           "Bandes gris anthracite sur les manches et étoile poitrine",
@@ -825,10 +881,10 @@
 
       if (!visualBox || !titleEl || !priceEl) return;
 
-      const chosenBase = activeStageAngle === "back" ? prod.backBase : prod.frontBase;
+      const chosenSlug = activeStageAngle === "back" ? prod.backSlug : prod.frontSlug;
       titleEl.textContent = prod.name;
       priceEl.textContent = `${prod.price} TND`;
-      visualBox.innerHTML = getSmartPhotoHTML(chosenBase, prod.name, "w-full h-full object-cover");
+      visualBox.innerHTML = getSmartPhotoHTML(chosenSlug, prod.name, "w-full h-full object-cover");
 
       if (angleLabel) {
         angleLabel.textContent = activeStageAngle === "back" ? "VUE DOS" : "VUE FACE";
@@ -918,7 +974,7 @@
                 <button type="button" onclick="openQuickView('${prod.id}')" class="absolute top-4 right-4 z-10 bg-black/70 hover:bg-white text-zinc-200 hover:text-obsidian border border-white/15 text-[10px] font-grotesk uppercase tracking-wider px-3 py-1 rounded-full transition cursor-pointer">
                   Détails
                 </button>
-                ${getSmartPhotoHTML(prod.frontBase, prod.name, "w-full h-full object-cover transition duration-500 hover:scale-105")}
+                ${getSmartPhotoHTML(prod.frontSlug, prod.name, "w-full h-full object-cover transition duration-500 hover:scale-105")}
               </div>
 
               <div class="p-6 pb-4">
@@ -975,7 +1031,7 @@
       const content = document.getElementById('quickview-content');
       content.innerHTML = `
         <div class="bg-obsidian rounded-2xl border border-white/10 h-64 overflow-hidden">
-          ${getSmartPhotoHTML(prod.frontBase, prod.name, "w-full h-full object-cover")}
+          ${getSmartPhotoHTML(prod.frontSlug, prod.name, "w-full h-full object-cover")}
         </div>
         <div class="space-y-4">
           <h4 class="font-display text-2xl font-bold text-white">${prod.name}</h4>
@@ -1079,7 +1135,7 @@
           name: prod.name,
           price: prod.price,
           size: size,
-          frontBase: prod.frontBase,
+          frontSlug: prod.frontSlug,
           qty: 1
         });
       }
@@ -1131,7 +1187,7 @@
       container.innerHTML = cart.map((item, idx) => `
         <div class="bg-obsidian border border-white/10 p-3.5 rounded-2xl flex items-center gap-3.5">
           <div class="w-14 h-16 bg-carbon rounded-xl flex-shrink-0 overflow-hidden">
-            ${getSmartPhotoHTML(item.frontBase, item.name, "w-full h-full object-cover")}
+            ${getSmartPhotoHTML(item.frontSlug, item.name, "w-full h-full object-cover")}
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
@@ -1279,6 +1335,7 @@
       renderStage3D();
       renderProducts();
       updateCartUI();
+      preloadAllBrandPhotos();
     });
   </script>
 </body>
