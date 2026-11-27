@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASTRON | Obsidian Compression & Performance</title>
+  <title>ASTRON | Obsidian Compression & Performance Athletics</title>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js for the 3D Space Star -->
+
+  <!-- Three.js 3D Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- Google Fonts: Syne, Space Grotesk & Inter -->
+
+  <!-- Google Fonts: Syne, Space Grotesk, Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -21,6 +24,7 @@
             display: ['Syne', 'sans-serif'],
             grotesk: ['Space Grotesk', 'sans-serif'],
             sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
             obsidian: '#050608',
@@ -28,6 +32,9 @@
             steel: '#161920',
             chrome: '#e4e4e7',
             slateaccent: '#a1a1aa',
+            titanium: '#d4d4d8',
+            cyberblue: '#3b82f6',
+            cyberemerald: '#10b981'
           }
         }
       }
@@ -35,10 +42,17 @@
   </script>
 
   <style>
+    /* Global Base & Custom Scrollbar */
+    * {
+      box-sizing: border-box;
+      cursor: default;
+    }
+
     body {
       background-color: #050608;
       color: #f4f4f5;
       overflow-x: hidden;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     }
 
     ::-webkit-scrollbar {
@@ -55,11 +69,47 @@
       background: #a1a1aa;
     }
 
+    /* Custom Cursor Element Styles */
+    #custom-cursor-dot {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      background: #ffffff;
+      border-radius: 50%;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+    }
+    #custom-cursor-ring {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s;
+    }
+
+    /* Glassmorphism Classes */
     .glass-nav {
-      background: rgba(5, 6, 8, 0.78);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(5, 6, 8, 0.85);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+      background: linear-gradient(160deg, rgba(22, 25, 32, 0.78) 0%, rgba(9, 11, 16, 0.90) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .perspective-1200 {
@@ -68,42 +118,118 @@
 
     .obsidian-card {
       transform-style: preserve-3d;
-      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
-      background: linear-gradient(160deg, rgba(20, 23, 30, 0.92) 0%, rgba(9, 11, 15, 0.98) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+      background: linear-gradient(160deg, rgba(16, 19, 26, 0.78) 0%, rgba(7, 9, 13, 0.92) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
     }
 
     .obsidian-card:hover {
-      border-color: rgba(255, 255, 255, 0.22);
-      box-shadow: 0 28px 56px -18px rgba(0, 0, 0, 0.92), 0 0 36px -10px rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow: 0 28px 56px -18px rgba(0, 0, 0, 0.95), 0 0 40px -10px rgba(255, 255, 255, 0.1);
     }
 
     .chrome-text {
-      background: linear-gradient(180deg, #ffffff 0%, #d4d4d8 52%, #71717a 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #e4e4e7 45%, #71717a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero-glow {
-      background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.06) 0%, rgba(5, 6, 8, 0) 62%);
+      background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.07) 0%, rgba(5, 6, 8, 0) 70%);
+    }
+
+    .apparel-3d-stage {
+      perspective: 1200px;
+      background: #07090d;
+    }
+
+    .apparel-garment-img {
+      will-change: transform;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Range Slider Styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #161920;
+      border-radius: 999px;
+      height: 6px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    }
+
+    /* Audio Equalizer Bars */
+    .eq-bar {
+      width: 3px;
+      background-color: #ffffff;
+      border-radius: 999px;
+      transition: height 0.1s ease;
+    }
+
+    /* Print styles for Invoice */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-invoice, #printable-invoice * {
+        visibility: visible;
+      }
+      #printable-invoice {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: #000 !important;
+        background: #fff !important;
+      }
     }
   </style>
 </head>
-<body class="font-sans antialiased selection:bg-white selection:text-obsidian">
+<body class="font-sans antialiased selection:bg-white selection:text-obsidian relative">
 
-  <!-- Toast Notification Box -->
-  <div id="toast-box" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+  <!-- DYNAMIC CUSTOM CURSOR ELEMENTS -->
+  <div id="custom-cursor-dot"></div>
+  <div id="custom-cursor-ring"></div>
+
+  <!-- GLOBAL STARFIELD CANVAS -->
+  <div id="global-starfield-wrap" class="fixed inset-0 z-0 pointer-events-none">
+    <canvas id="global-starfield-canvas" class="w-full h-full block"></canvas>
+  </div>
+
+  <!-- AUDIO VISUALIZER HUD & SOUND TOGGLE BUTTON -->
+  <div class="fixed bottom-6 left-6 z-40 flex items-center gap-3 bg-carbon/90 backdrop-blur-xl border border-white/10 px-4 py-2.5 rounded-2xl shadow-2xl">
+    <button type="button" id="audio-toggle-btn" onclick="toggleAudioEngine()" class="flex items-center gap-3 text-xs font-grotesk uppercase tracking-wider text-zinc-300 hover:text-white transition">
+      <div id="eq-container" class="flex items-end gap-1 h-4 w-4">
+        <div class="eq-bar h-1" id="eq1"></div>
+        <div class="eq-bar h-3" id="eq2"></div>
+        <div class="eq-bar h-2" id="eq3"></div>
+      </div>
+      <span id="audio-status-label">SOUND: OFF</span>
+    </button>
+  </div>
+
+  <!-- TOAST NOTIFICATION BOX -->
+  <div id="toast-box" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none max-w-sm">
     <div class="bg-carbon/95 backdrop-blur-xl border border-zinc-700/80 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3">
-      <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-      <span id="toast-msg" class="text-sm font-medium tracking-wide">Produit ajouté au panier</span>
+      <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse flex-shrink-0"></span>
+      <span id="toast-msg" class="text-xs sm:text-sm font-medium tracking-wide">Produit ajouté au panier</span>
     </div>
   </div>
 
-  <!-- Navigation Header -->
+  <!-- NAVIGATION HEADER -->
   <header class="glass-nav fixed top-0 inset-x-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <svg class="w-7 h-9 text-white transition-transform duration-300 group-hover:scale-110" viewBox="0 0 60 110" fill="none">
+      <a href="#" class="flex items-center gap-3 group" onclick="playUiClickSound()">
+        <svg class="w-8 h-10 text-white transition-transform duration-300 group-hover:scale-110" viewBox="0 0 60 110" fill="none">
           <path d="M30 4 C31 24, 33 27, 54 29 C33 31, 31 34, 30 66 C29 34, 27 31, 6 29 C27 27, 29 24, 30 4 Z" fill="url(#navStarGrad)"/>
           <path d="M30 70 C31 76, 33 78, 35 79 C32 80, 31 85, 30 106 C29 85, 28 80, 25 79 C27 78, 29 76, 30 70 Z" fill="url(#navStarGrad)"/>
           <defs>
@@ -114,261 +240,349 @@
             </linearGradient>
           </defs>
         </svg>
-        <span class="font-display font-extrabold text-2xl tracking-[0.24em] text-white">ASTRON</span>
+        <div class="flex flex-col">
+          <span class="font-display font-extrabold text-2xl tracking-[0.24em] text-white leading-none">ASTRON</span>
+          <span class="text-[9px] font-grotesk tracking-[0.3em] text-zinc-400 uppercase mt-0.5">OBSIDIAN ATHLETICS</span>
+        </div>
       </a>
 
-      <nav class="hidden md:flex items-center gap-9 text-xs font-grotesk uppercase tracking-[0.22em] text-zinc-400">
-        <a href="#stage-3d" class="hover:text-white transition">Lookbook</a>
-        <a href="#collection" class="hover:text-white transition">Collection 01</a>
-        <a href="#tech" class="hover:text-white transition">Technologie</a>
-        <a href="#size-finder" class="hover:text-white transition">Size Finder</a>
+      <nav class="hidden md:flex items-center gap-8 text-xs font-grotesk uppercase tracking-[0.22em] text-zinc-400">
+        <a href="#stage-3d" onclick="playUiClickSound()" class="hover:text-white transition">3D Studio</a>
+        <a href="#collection" onclick="playUiClickSound()" class="hover:text-white transition">Collection</a>
+        <a href="#tech-lab" onclick="playUiClickSound()" class="hover:text-white transition">Tech Lab</a>
+        <a href="#size-finder" onclick="playUiClickSound()" class="hover:text-white transition">Size Finder AI</a>
+        <a href="#faq-section" onclick="playUiClickSound()" class="hover:text-white transition">FAQ</a>
+        <button type="button" onclick="toggleAdminConsole(); playUiClickSound();" class="hover:text-emerald-400 transition text-zinc-500 flex items-center gap-1.5 font-bold">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          Console COD
+        </button>
       </nav>
 
-      <button type="button" onclick="toggleCart(true)" class="relative flex items-center gap-2.5 bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/25 px-4 py-2.5 rounded-xl transition cursor-pointer">
-        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-        </svg>
-        <span class="text-xs font-grotesk uppercase tracking-widest font-semibold hidden sm:inline">Panier</span>
-        <span id="cart-badge" class="bg-white text-obsidian text-xs font-bold px-2 py-0.5 rounded-full">0</span>
-      </button>
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="toggleCart(true); playUiClickSound();" class="relative flex items-center gap-2.5 bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 hover:border-white/25 px-4 py-2.5 rounded-xl transition cursor-pointer">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span class="text-xs font-grotesk uppercase tracking-widest font-semibold hidden sm:inline">Panier</span>
+          <span id="cart-badge" class="bg-white text-obsidian text-xs font-bold px-2 py-0.5 rounded-full font-mono">0</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- HERO SECTION: Clean Luxury 3D Space Star -->
-  <section id="reel" class="relative min-h-screen pt-20 flex flex-col justify-end overflow-hidden border-b border-white/[0.06]">
-    <div id="canvas-wrapper" class="absolute inset-0 z-0 cursor-grab active:cursor-grabbing bg-[radial-gradient(ellipse_at_top,#13161f_0%,#06070a_58%,#030406_100%)]">
+  <!-- HERO SECTION: THREE.JS 3D INTERACTIVE EMBLEM & GALAXY BACKDROP -->
+  <section id="reel" class="relative z-10 min-h-screen pt-20 flex flex-col justify-end overflow-hidden border-b border-white/[0.06] bg-obsidian">
+    <div id="galaxy-layer" class="absolute -inset-12 z-0 pointer-events-none opacity-65">
+      <canvas id="galaxy-canvas" class="w-full h-full block"></canvas>
+    </div>
+
+    <div id="canvas-wrapper" class="absolute inset-0 z-[5] cursor-grab active:cursor-grabbing">
       <canvas id="emblem-canvas" class="w-full h-full block"></canvas>
     </div>
 
     <div class="hero-glow absolute inset-0 pointer-events-none z-10"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#050608_95%)] pointer-events-none z-10"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_26%,rgba(5,6,8,0.88)_95%)] pointer-events-none z-10"></div>
 
     <div class="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-14 pt-56 md:pt-72 flex flex-col lg:flex-row lg:items-end justify-between gap-8 pointer-events-none">
       <div class="max-w-2xl pointer-events-auto">
-        <div class="inline-flex items-center gap-2.5 bg-white/[0.05] backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full mb-5">
-          <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+        <div class="inline-flex items-center gap-2.5 bg-white/[0.06] backdrop-blur-md border border-white/15 px-4 py-2 rounded-full mb-6">
+          <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
           <span class="font-grotesk text-[11px] uppercase tracking-[0.26em] text-zinc-200">DROP 01 • ORBITAL ATHLETIC WEAR</span>
         </div>
-        <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight leading-[0.94] chrome-text mb-5">
+        <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight leading-[0.92] chrome-text mb-6">
           FORGED IN OBSIDIAN.
         </h1>
-        <p class="text-zinc-300/90 text-sm sm:text-base max-w-xl leading-relaxed mb-8">
-          Compression seconde peau, crewneck structuré et veste sherpa haute densité. Finitions argent métallisé et coupe pensée pour la performance.
+        <p class="text-zinc-300/95 text-sm sm:text-base max-w-xl leading-relaxed mb-8 font-normal">
+          Compression seconde peau, crewnecks structurés, vestes sherpa haute densité et vêtements modulaires. Finitions argent métallisé et coupe vectorielle pensée pour la performance ultime.
         </p>
         <div class="flex flex-wrap items-center gap-4">
-          <a href="#collection" class="bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs sm:text-sm uppercase tracking-[0.2em] px-8 py-4 rounded-xl transition shadow-xl shadow-white/10">
+          <a href="#collection" onclick="playUiClickSound()" class="bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs sm:text-sm uppercase tracking-[0.2em] px-8 py-4 rounded-xl transition shadow-xl shadow-white/10 hover:scale-[1.02] active:scale-[0.98]">
             Découvrir le Drop
           </a>
-          <a href="#size-finder" class="bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-md text-white border border-white/15 font-grotesk font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] px-7 py-4 rounded-xl transition">
-            Guide des Tailles
+          <a href="#size-finder" onclick="playUiClickSound()" class="bg-white/[0.06] hover:bg-white/[0.12] backdrop-blur-md text-white border border-white/15 font-grotesk font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] px-7 py-4 rounded-xl transition hover:scale-[1.02] active:scale-[0.98]">
+            Guide des Tailles AI
           </a>
         </div>
       </div>
 
-      <!-- Subtle Minimalist 3D Control Pill -->
-      <div class="pointer-events-auto bg-black/60 backdrop-blur-xl border border-white/10 p-3.5 rounded-2xl flex items-center gap-3 self-start lg:self-end">
-        <span id="vibe-label" class="text-[11px] font-grotesk uppercase tracking-[0.2em] text-zinc-300 px-2">TITANIUM</span>
-        <button type="button" onclick="toggleVibe()" class="bg-white/10 hover:bg-white/20 text-white text-[11px] font-grotesk uppercase tracking-wider py-2 px-3.5 rounded-xl border border-white/10 transition cursor-pointer">
-          Changer Reflet
+      <div class="pointer-events-auto bg-black/70 backdrop-blur-xl border border-white/10 p-4 rounded-2xl flex items-center gap-4 self-start lg:self-end">
+        <div class="flex flex-col">
+          <span class="text-[9px] font-grotesk uppercase tracking-widest text-zinc-500">REFLET METAL 3D</span>
+          <span id="vibe-label" class="text-xs font-grotesk uppercase tracking-[0.2em] text-zinc-200 font-bold">TITANIUM CHROME</span>
+        </div>
+        <button type="button" onclick="toggleVibe(); playUiClickSound();" class="bg-white/10 hover:bg-white/20 text-white text-[11px] font-grotesk uppercase tracking-wider py-2.5 px-4 rounded-xl border border-white/15 transition cursor-pointer">
+          Changer Shader
         </button>
       </div>
     </div>
   </section>
 
   <!-- BRAND TRUST BAR -->
-  <section class="border-b border-white/[0.06] bg-carbon/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
-      <div class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold">01</span>
+  <section class="relative z-10 border-b border-white/[0.06] bg-carbon/60 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 grid grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
+      <div class="flex items-center gap-3.5">
+        <span class="w-9 h-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold text-sm">01</span>
         <div>
-          <div class="text-white font-semibold">Livraison Tunisie</div>
-          <div class="text-zinc-500">24 à 48h partout en Tunisie</div>
+          <div class="text-white font-semibold">Livraison Express Tunisie</div>
+          <div class="text-zinc-400 text-[11px]">24 à 48h sur les 24 Gouvernorats</div>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold">02</span>
+      <div class="flex items-center gap-3.5">
+        <span class="w-9 h-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold text-sm">02</span>
         <div>
           <div class="text-white font-semibold">Paiement à la Livraison</div>
-          <div class="text-zinc-500">Cash On Delivery (COD)</div>
+          <div class="text-zinc-400 text-[11px]">Cash On Delivery (COD) sécurisé</div>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold">03</span>
+      <div class="flex items-center gap-3.5">
+        <span class="w-9 h-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold text-sm">03</span>
         <div>
           <div class="text-white font-semibold">Textile Haute Densité</div>
-          <div class="text-zinc-500">250 à 380 GSM certifié</div>
+          <div class="text-zinc-400 text-[11px]">250 à 420 GSM certifié pro</div>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold">04</span>
+      <div class="flex items-center gap-3.5">
+        <span class="w-9 h-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-white font-grotesk font-bold text-sm">04</span>
         <div>
-          <div class="text-white font-semibold">Livraison Gratuite</div>
-          <div class="text-zinc-500">Dès 150 TND d'achat</div>
+          <div class="text-white font-semibold">Livraison Offerte</div>
+          <div class="text-zinc-400 text-[11px]">Dès 150 TND d'achats</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3D PARALLAX PHOTO SHOWCASE STAGE -->
-  <section id="stage-3d" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+  <!-- 3D PARALLAX INTERACTIVE STUDIO LOOKBOOK -->
+  <section id="stage-3d" class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
     <div class="obsidian-card rounded-3xl p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
       <div class="lg:col-span-6 perspective-1200">
         <div id="stage-3d-card" onmousemove="tiltStageCard(event)" onmouseleave="resetStageCard()"
-             class="relative h-[450px] sm:h-[510px] rounded-2xl bg-[#080a0e] border border-white/10 overflow-hidden select-none shadow-2xl">
-          <img id="stage-photo" src="./tee-front.jpg" alt="Obsidian Tribal Compression Tee" class="w-full h-full object-cover" />
-          <div class="absolute top-4 left-4 bg-black/70 backdrop-blur-md border border-white/10 text-zinc-200 text-[10px] font-grotesk uppercase tracking-[0.22em] px-3 py-1.5 rounded-full pointer-events-none">
-            ASTRON STUDIO
+             class="apparel-3d-stage relative h-[460px] sm:h-[520px] rounded-2xl border border-white/15 overflow-hidden select-none shadow-[0_20px_60px_rgba(0,0,0,0.85)]">
+          <svg id="stage-garment-svg" class="apparel-garment-img relative z-[2] w-full h-full p-8" viewBox="0 0 400 450" fill="none">
+            <!-- Rendered by JS -->
+          </svg>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_60%,rgba(4,5,7,0.65)_100%)] z-[3] pointer-events-none"></div>
+          <div class="absolute top-4 left-4 z-10 bg-black/75 backdrop-blur-md border border-white/10 text-zinc-200 text-[10px] font-grotesk uppercase tracking-[0.22em] px-3.5 py-1.5 rounded-full pointer-events-none">
+            ASTRON STUDIO 360°
           </div>
-          <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[11px] font-grotesk uppercase tracking-widest text-zinc-200 bg-black/70 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 pointer-events-none">
+          <div class="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between text-[11px] font-grotesk uppercase tracking-widest text-zinc-200 bg-black/75 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 pointer-events-none">
             <span id="stage-angle-label">VUE FACE</span>
-            <span class="text-zinc-400">SURVOL 3D</span>
+            <span id="stage-gsm-tag" class="text-zinc-400 font-mono">250 GSM</span>
           </div>
         </div>
       </div>
 
       <div class="lg:col-span-6 space-y-6">
         <div>
-          <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">STUDIO LOOKBOOK</span>
+          <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">STUDIO LOOKBOOK INTERACTIF</span>
           <h2 id="stage-title" class="font-display text-3xl sm:text-4xl font-extrabold uppercase text-white mt-2 leading-tight">
             Obsidian Tribal Compression Tee
           </h2>
         </div>
 
         <p id="stage-desc" class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-          Explorez chaque détail des pièces du Drop 01 : motifs tribaux contrastés, étoile centrale signature et coupes athlétiques structurées.
+          Explorez chaque angle des pièces emblématiques du Drop 01 : motifs tribaux contrastés, emblème étoilé signature et coupes athlétiques vectorielles.
         </p>
 
         <div>
-          <label class="block text-[11px] font-grotesk uppercase tracking-[0.2em] text-zinc-400 mb-2.5">Sélectionner la pièce</label>
-          <div class="grid grid-cols-3 gap-2.5" id="stage-piece-buttons"></div>
+          <label class="block text-[11px] font-grotesk uppercase tracking-[0.2em] text-zinc-400 mb-2.5">Sélectionner la pièce du Studio</label>
+          <div class="grid grid-cols-4 sm:grid-cols-8 gap-2" id="stage-piece-buttons"></div>
         </div>
 
         <div class="flex items-center gap-3">
-          <button type="button" id="btn-view-front" onclick="setStageAngle('front')"
+          <button type="button" id="btn-view-front" onclick="setStageAngle('front'); playUiClickSound();"
             class="px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-white text-obsidian transition cursor-pointer">
-            Face
+            Vue Face
           </button>
-          <button type="button" id="btn-view-back" onclick="setStageAngle('back')"
+          <button type="button" id="btn-view-back" onclick="setStageAngle('back'); playUiClickSound();"
             class="px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-steel text-zinc-300 hover:text-white border border-white/10 transition cursor-pointer">
-            Dos
+            Vue Dos
+          </button>
+          <button type="button" id="btn-view-zoom" onclick="setStageAngle('zoom'); playUiClickSound();"
+            class="px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-steel text-zinc-300 hover:text-white border border-white/10 transition cursor-pointer">
+            Détails GSM
           </button>
         </div>
 
-        <div class="pt-2 flex flex-wrap items-center gap-4 border-t border-white/[0.07]">
+        <div class="pt-4 flex flex-wrap items-center gap-4 border-t border-white/[0.08]">
           <button type="button" onclick="addStageProductToCart()"
-            class="bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] px-7 py-4 rounded-xl transition shadow-lg shadow-white/5 cursor-pointer">
+            class="bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] px-8 py-4 rounded-xl transition shadow-lg shadow-white/10 cursor-pointer hover:scale-[1.02]">
             Commander • <span id="stage-price-label">69 TND</span>
           </button>
-          <span class="text-xs text-zinc-400">En stock • Expédition rapide</span>
+          <span class="text-xs text-zinc-400 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Stock disponible en Tunisie
+          </span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PRODUCT COLLECTION SECTION -->
-  <section id="collection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+  <!-- PRODUCT CATALOG SECTION -->
+  <section id="collection" class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
       <div>
-        <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">COLLECTION 01</span>
+        <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">CATALOGUE EXCLUSIF</span>
         <h2 class="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-white mt-2">
-          COMPRESSION & OUTERWEAR
+          COLLECTION 01 • OBSIDIAN
         </h2>
       </div>
-      <p class="text-zinc-400 text-sm max-w-md">
-        Livraison partout en Tunisie (7 TND) • <span class="text-white font-semibold">Gratuite dès 150 TND</span>. Paiement en espèces à la réception.
-      </p>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Category Filter Pills -->
+        <div class="flex flex-wrap items-center gap-2 bg-carbon/80 backdrop-blur-md p-1.5 rounded-2xl border border-white/10">
+          <button type="button" onclick="filterCategory('all'); playUiClickSound();" id="filter-all" class="cat-filter-btn bg-white text-obsidian font-grotesk text-xs uppercase tracking-wider font-bold px-4 py-2 rounded-xl transition cursor-pointer">Tous</button>
+          <button type="button" onclick="filterCategory('compression'); playUiClickSound();" id="filter-compression" class="cat-filter-btn text-zinc-400 hover:text-white font-grotesk text-xs uppercase tracking-wider font-bold px-4 py-2 rounded-xl transition cursor-pointer">Compression</button>
+          <button type="button" onclick="filterCategory('outerwear'); playUiClickSound();" id="filter-outerwear" class="cat-filter-btn text-zinc-400 hover:text-white font-grotesk text-xs uppercase tracking-wider font-bold px-4 py-2 rounded-xl transition cursor-pointer">Outerwear</button>
+          <button type="button" onclick="filterCategory('bottoms'); playUiClickSound();" id="filter-bottoms" class="cat-filter-btn text-zinc-400 hover:text-white font-grotesk text-xs uppercase tracking-wider font-bold px-4 py-2 rounded-xl transition cursor-pointer">Bas & Shorts</button>
+        </div>
+
+        <!-- Sort dropdown -->
+        <select id="catalog-sort" onchange="sortCatalog(this.value); playUiClickSound();" class="bg-carbon border border-white/10 text-xs text-white font-grotesk uppercase tracking-wider px-3 py-2.5 rounded-2xl outline-none">
+          <option value="popular">Trier par : Popularité</option>
+          <option value="price-low">Prix : Croissant</option>
+          <option value="price-high">Prix : Décroissant</option>
+          <option value="gsm">Densité GSM</option>
+        </select>
+      </div>
     </div>
 
-    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Rendered dynamically -->
+    </div>
   </section>
 
-  <!-- FABRIC TECH & INTERACTIVE SIZE FINDER -->
-  <section id="size-finder" class="border-t border-white/[0.06] bg-carbon/50 py-24">
+  <!-- TEXTILE SCIENCE LAB -->
+  <section id="tech-lab" class="relative z-10 border-t border-white/[0.06] bg-carbon/40 backdrop-blur-sm py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div class="text-center max-w-3xl mx-auto">
+        <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">LABORATOIRE TEXTILE</span>
+        <h2 class="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-white mt-2">
+          INGÉNIERIE DE COMPRESSION
+        </h2>
+        <p class="text-zinc-400 text-sm sm:text-base mt-4 leading-relaxed">
+          Chaque fibre des tissus ASTRON est calibrée en grammage GSM pour optimiser le retour veineux, la thermorégulation et la durabilité sous contrainte athlétique extrême.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:border-white/30 transition">
+          <div class="text-4xl font-display font-extrabold text-white mb-2">250 GSM</div>
+          <h3 class="text-lg font-bold text-zinc-200 mb-2">Tactel Vectoriel Seconde Peau</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-6">Maintien musculaire continu à haute pression. Réduit les micro-traumatismes musculaires lors des mouvements explosifs.</p>
+          <div class="w-full bg-obsidian rounded-full h-2 overflow-hidden border border-white/10">
+            <div class="bg-white h-full w-[85%] rounded-full"></div>
+          </div>
+          <span class="text-[10px] font-grotesk text-zinc-400 uppercase tracking-widest mt-2 block">Niveau de Compression : 85%</span>
+        </div>
+
+        <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:border-white/30 transition">
+          <div class="text-4xl font-display font-extrabold text-white mb-2">340 GSM</div>
+          <h3 class="text-lg font-bold text-zinc-200 mb-2">Molleton Lourd Heavy-Duty</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-6">Coton peigné et filés synthétiques structurés. Conserve sa forme originale après plus de 500 cycles de lavage.</p>
+          <div class="w-full bg-obsidian rounded-full h-2 overflow-hidden border border-white/10">
+            <div class="bg-white h-full w-[92%] rounded-full"></div>
+          </div>
+          <span class="text-[10px] font-grotesk text-zinc-400 uppercase tracking-widest mt-2 block">Densité & Structure : 92%</span>
+        </div>
+
+        <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:border-white/30 transition">
+          <div class="text-4xl font-display font-extrabold text-white mb-2">420 GSM</div>
+          <h3 class="text-lg font-bold text-zinc-200 mb-2">Sherpa Thermal Obsidian</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-6">Isolation thermique avancée avec microstructure à alvéoles d'air. Barrière contre le vent et le froid extrême.</p>
+          <div class="w-full bg-obsidian rounded-full h-2 overflow-hidden border border-white/10">
+            <div class="bg-white h-full w-[98%] rounded-full"></div>
+          </div>
+          <span class="text-[10px] font-grotesk text-zinc-400 uppercase tracking-widest mt-2 block">Retention Thermique : 98%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SMART SIZE FINDER AI SECTION -->
+  <section id="size-finder" class="relative z-10 border-t border-white/[0.06] bg-obsidian py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
-        <div id="tech" class="lg:col-span-6 space-y-6">
-          <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">ARCHITECTURE TEXTILE</span>
-          <h2 class="font-display text-3xl sm:text-4xl font-extrabold uppercase text-white">
-            CONÇU POUR LA PERFORMANCE
+        
+        <div class="lg:col-span-5 space-y-6">
+          <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">RECOMMANDATION INTELLIGENTE</span>
+          <h2 class="font-display text-3xl sm:text-5xl font-extrabold uppercase text-white leading-tight">
+            CALCUL DE TAILLE
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Des matières techniques sélectionnées pour offrir un maintien musculaire précis, une liberté de mouvement totale et une esthétique sombre intemporelle.
+            Notre algorithme combine votre indice de masse corporelle (IMC) et vos préférences de coupe pour calibrer instantanément votre taille sur l'ensemble de la gamme ASTRON.
           </p>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div class="bg-obsidian/90 border border-white/[0.07] p-5 rounded-2xl">
-              <div class="text-white font-grotesk font-bold text-lg mb-1">250 GSM</div>
-              <div class="text-zinc-200 font-semibold text-sm mb-1">Compression Pro</div>
-              <p class="text-zinc-500 text-xs">Maintien ferme qui épouse la silhouette athlétique.</p>
+          <div class="space-y-4 pt-2">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-white/10 text-white font-mono text-xs flex items-center justify-center font-bold">1</span>
+              <span class="text-xs text-zinc-300">Ajustement anatomique au millimètre près</span>
             </div>
-            <div class="bg-obsidian/90 border border-white/[0.07] p-5 rounded-2xl">
-              <div class="text-white font-grotesk font-bold text-lg mb-1">ASTRON STAR</div>
-              <div class="text-zinc-200 font-semibold text-sm mb-1">Signature Étoile</div>
-              <p class="text-zinc-500 text-xs">Emblème identitaire travaillé sur chaque pièce.</p>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-white/10 text-white font-mono text-xs flex items-center justify-center font-bold">2</span>
+              <span class="text-xs text-zinc-300">Prise en compte du drop épaule/taille</span>
             </div>
-            <div class="bg-obsidian/90 border border-white/[0.07] p-5 rounded-2xl">
-              <div class="text-white font-grotesk font-bold text-lg mb-1">SLATE LINES</div>
-              <div class="text-zinc-200 font-semibold text-sm mb-1">Découpes Contrastées</div>
-              <p class="text-zinc-500 text-xs">Motifs tribaux et bandes latérales gris anthracite.</p>
-            </div>
-            <div class="bg-obsidian/90 border border-white/[0.07] p-5 rounded-2xl">
-              <div class="text-white font-grotesk font-bold text-lg mb-1">380 GSM</div>
-              <div class="text-zinc-200 font-semibold text-sm mb-1">Sherpa & Molleton</div>
-              <p class="text-zinc-500 text-xs">Chaleur et tenue irréprochable hors entraînement.</p>
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-white/10 text-white font-mono text-xs flex items-center justify-center font-bold">3</span>
+              <span class="text-xs text-zinc-300">Application automatique sur vos futurs achats</span>
             </div>
           </div>
         </div>
 
-        <div class="lg:col-span-6">
-          <div class="obsidian-card p-6 sm:p-8 rounded-3xl">
-            <div class="flex items-center justify-between mb-6">
+        <div class="lg:col-span-7">
+          <div class="obsidian-card p-6 sm:p-10 rounded-3xl space-y-8">
+            <div class="flex items-center justify-between border-b border-white/10 pb-5">
               <div>
-                <h3 class="font-display text-2xl font-bold uppercase text-white">Size Finder</h3>
-                <p class="text-zinc-400 text-xs mt-1">Trouvez votre taille idéale en quelques secondes</p>
+                <h3 class="font-display text-2xl font-bold uppercase text-white">Size Finder Engine</h3>
+                <p class="text-zinc-400 text-xs mt-0.5">Calibrage basé sur l'anatomie athlétique</p>
               </div>
-              <span class="bg-white/[0.06] text-zinc-200 text-[11px] font-grotesk uppercase tracking-widest px-3 py-1 rounded-full border border-white/10">
-                Fit Guide
+              <span class="bg-white/10 text-white text-[10px] font-grotesk uppercase tracking-widest px-3 py-1.5 rounded-full border border-white/15">
+                Algorithme V2.8
               </span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-              <div>
-                <label class="block text-xs font-grotesk uppercase tracking-wider text-zinc-400 mb-2">Taille (cm)</label>
-                <input type="number" id="calc-height" placeholder="Ex: 173" min="145" max="215"
-                  class="w-full bg-obsidian border border-white/10 focus:border-white/40 rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
+            <!-- Height Input & Slider -->
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs font-grotesk uppercase tracking-wider">
+                <label class="text-zinc-400">Taille de l'athlète</label>
+                <span id="slider-height-val" class="text-white font-bold font-mono">178 cm</span>
               </div>
-              <div>
-                <label class="block text-xs font-grotesk uppercase tracking-wider text-zinc-400 mb-2">Poids (kg)</label>
-                <input type="number" id="calc-weight" placeholder="Ex: 75" min="45" max="140"
-                  class="w-full bg-obsidian border border-white/10 focus:border-white/40 rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
-              </div>
+              <input type="range" id="calc-height-slider" min="140" max="215" value="178" oninput="updateHeightSlider(this.value)" class="w-full cursor-pointer" />
             </div>
 
-            <div class="mb-6">
-              <label class="block text-xs font-grotesk uppercase tracking-wider text-zinc-400 mb-2">Coupe souhaitée</label>
+            <!-- Weight Input & Slider -->
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs font-grotesk uppercase tracking-wider">
+                <label class="text-zinc-400">Poids de l'athlète</label>
+                <span id="slider-weight-val" class="text-white font-bold font-mono">78 kg</span>
+              </div>
+              <input type="range" id="calc-weight-slider" min="40" max="140" value="78" oninput="updateWeightSlider(this.value)" class="w-full cursor-pointer" />
+            </div>
+
+            <!-- Fit Preference Selector -->
+            <div>
+              <label class="block text-xs font-grotesk uppercase tracking-wider text-zinc-400 mb-3">Style de Coupe Souhaité</label>
               <div class="grid grid-cols-2 gap-3">
-                <button type="button" id="fit-pro" onclick="setFitPref('pro')"
-                  class="fit-pref-btn bg-white/15 border border-white/40 text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer">
-                  Pro Compression
+                <button type="button" id="fit-pro" onclick="setFitPref('pro'); playUiClickSound();"
+                  class="fit-pref-btn bg-white/15 border border-white/40 text-white text-xs font-grotesk uppercase tracking-wider py-3.5 rounded-xl font-bold transition cursor-pointer">
+                  Pro Compression (Seconde Peau)
                 </button>
-                <button type="button" id="fit-comfort" onclick="setFitPref('comfort')"
-                  class="fit-pref-btn bg-obsidian border border-white/10 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer">
-                  Plus Décontracté (+1)
+                <button type="button" id="fit-comfort" onclick="setFitPref('comfort'); playUiClickSound();"
+                  class="fit-pref-btn bg-obsidian border border-white/10 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3.5 rounded-xl font-bold transition cursor-pointer">
+                  Décontracté Comfort (+1 Size)
                 </button>
               </div>
             </div>
 
-            <button type="button" onclick="calculateSize()" class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-xl transition cursor-pointer">
-              Calculer Ma Taille
+            <button type="button" onclick="calculateSize(); playUiClickSound();" class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-xl transition cursor-pointer shadow-xl hover:scale-[1.01]">
+              Calculer Ma Taille Recommandée
             </button>
 
-            <div id="size-result" class="hidden mt-6 bg-obsidian border border-white/15 rounded-2xl p-4 flex items-center justify-between gap-4">
+            <!-- Result Box -->
+            <div id="size-result" class="hidden bg-carbon/90 border border-white/15 rounded-2xl p-5 flex items-center justify-between gap-4">
               <div>
-                <span class="text-xs text-zinc-400 block">Taille Recommandée :</span>
-                <span id="rec-size-note" class="text-xs text-zinc-200 mt-0.5 block">Fit ajusté pour vos mensurations.</span>
+                <span class="text-xs text-zinc-400 block font-grotesk uppercase tracking-wider">Recommandation ASTRON :</span>
+                <span id="rec-size-note" class="text-xs text-zinc-200 mt-1 block leading-relaxed">Coupe optimisée pour vos mensurations.</span>
               </div>
-              <div id="rec-size-badge" class="font-display text-3xl font-extrabold text-white bg-white/10 border border-white/25 px-5 py-2 rounded-xl">
+              <div id="rec-size-badge" class="font-display text-4xl font-extrabold text-white bg-white/10 border border-white/30 px-6 py-2.5 rounded-2xl">
                 L
               </div>
             </div>
@@ -379,28 +593,180 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-white/[0.06] bg-obsidian py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-      <div class="flex items-center gap-3">
-        <span class="font-display font-extrabold text-xl tracking-[0.24em] text-white">ASTRON</span>
-        <span class="text-zinc-700 text-xs">|</span>
-        <span class="text-zinc-500 text-xs">Tunisia Performance Division</span>
+  <!-- CUSTOMER REVIEWS & TESTIMONIALS SWIPER -->
+  <section class="relative z-10 border-t border-white/[0.06] bg-carbon/40 backdrop-blur-sm py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div class="text-center max-w-2xl mx-auto">
+        <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">AVIS VERIFIÉS</span>
+        <h2 class="font-display text-3xl sm:text-4xl font-extrabold uppercase text-white mt-2">
+          RETOURS DES ATHLÈTES
+        </h2>
       </div>
-      <p class="text-zinc-500 text-xs text-center sm:text-right">
-        &copy; 2026 ASTRON ATHLETICS. Tous droits réservés. Paiement à la livraison partout en Tunisie.
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="obsidian-card p-8 rounded-3xl space-y-4">
+          <div class="flex items-center gap-1 text-white text-sm">★★★★★</div>
+          <p class="text-xs text-zinc-300 leading-relaxed">"La qualité du tissu 250 GSM du Compression Tee est incroyable. Maintien parfait pendant mes séances de powerlifting à Tunis."</p>
+          <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
+            <span class="font-bold text-white">Karim B.</span>
+            <span class="text-emerald-400 text-[10px] font-mono">✓ Acheteur Vérifié (Tunis)</span>
+          </div>
+        </div>
+
+        <div class="obsidian-card p-8 rounded-3xl space-y-4">
+          <div class="flex items-center gap-1 text-white text-sm">★★★★★</div>
+          <p class="text-xs text-zinc-300 leading-relaxed">"Veste Sherpa reçue en 24h à Sousse. La livraison COD était ultra rapide et le produit dépasse mes attentes en terme de finition."</p>
+          <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
+            <span class="font-bold text-white">Mehdi S.</span>
+            <span class="text-emerald-400 text-[10px] font-mono">✓ Acheteur Vérifié (Sousse)</span>
+          </div>
+        </div>
+
+        <div class="obsidian-card p-8 rounded-3xl space-y-4">
+          <div class="flex items-center gap-1 text-white text-sm">★★★★★</div>
+          <p class="text-xs text-zinc-300 leading-relaxed">"Le Size Finder AI a recommandé L pour 1m82 / 82kg et c'est exactement la taille idéale. Bravo pour cette plateforme !"</p>
+          <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
+            <span class="font-bold text-white">Sami K.</span>
+            <span class="text-emerald-400 text-[10px] font-mono">✓ Acheteur Vérifié (Sfax)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE FAQ ACCORDION SECTION -->
+  <section id="faq-section" class="relative z-10 border-t border-white/[0.06] bg-obsidian py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div class="text-center">
+        <span class="font-grotesk text-zinc-400 text-xs uppercase tracking-[0.26em] font-semibold">FOIRE AUX QUESTIONS</span>
+        <h2 class="font-display text-3xl sm:text-4xl font-extrabold uppercase text-white mt-2">
+          QUESTIONS FRÉQUENTES
+        </h2>
+      </div>
+
+      <div class="space-y-4" id="faq-container">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- REAL-TIME ADMIN DASHBOARD (TOGGLEABLE) -->
+  <section id="admin-console" class="relative z-10 border-t border-white/[0.06] bg-carbon/80 backdrop-blur-md py-20 hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-6">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-grotesk text-emerald-400 text-xs uppercase tracking-[0.26em] font-semibold">PANNEAU DE CONTRÔLE ADMIN</span>
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-extrabold uppercase text-white mt-1">
+            GESTION DES COMMANDES (TUNISIE COD)
+          </h2>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <div class="bg-obsidian border border-white/10 px-4 py-2.5 rounded-xl flex items-center gap-3">
+            <span class="text-xs text-zinc-400">Total Chiffre d'Affaires:</span>
+            <span id="admin-total-revenue" class="font-mono font-bold text-emerald-400 text-sm">0 TND</span>
+          </div>
+          <div class="bg-obsidian border border-white/10 px-4 py-2.5 rounded-xl flex items-center gap-3">
+            <span class="text-xs text-zinc-400">Commandes:</span>
+            <span id="admin-total-count" class="font-mono font-bold text-white text-sm">0</span>
+          </div>
+          <button type="button" onclick="exportOrdersToCSV()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-grotesk uppercase tracking-wider px-4 py-2.5 rounded-xl border border-white/15 transition cursor-pointer">
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="w-full sm:w-72">
+          <input type="text" id="admin-search-input" oninput="filterAdminOrders()" placeholder="Rechercher nom, réf ou tel..."
+            class="w-full bg-obsidian border border-white/10 focus:border-white/30 rounded-xl px-4 py-2.5 text-xs text-white outline-none" />
+        </div>
+        <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
+          <button type="button" onclick="filterAdminStatus('ALL')" class="admin-status-btn bg-white text-obsidian text-xs font-grotesk font-bold px-3.5 py-2 rounded-xl transition">Toutes</button>
+          <button type="button" onclick="filterAdminStatus('PENDING')" class="admin-status-btn bg-obsidian border border-white/10 text-zinc-400 text-xs font-grotesk font-bold px-3.5 py-2 rounded-xl transition">En Attente</button>
+          <button type="button" onclick="filterAdminStatus('CONFIRMED')" class="admin-status-btn bg-obsidian border border-white/10 text-zinc-400 text-xs font-grotesk font-bold px-3.5 py-2 rounded-xl transition">Confirmées</button>
+          <button type="button" onclick="filterAdminStatus('SHIPPED')" class="admin-status-btn bg-obsidian border border-white/10 text-zinc-400 text-xs font-grotesk font-bold px-3.5 py-2 rounded-xl transition">Expédiées</button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="obsidian-card rounded-2xl overflow-hidden border border-white/10">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-obsidian text-zinc-400 uppercase font-grotesk tracking-wider border-b border-white/10">
+              <tr>
+                <th class="px-5 py-4">Réf Commande</th>
+                <th class="px-5 py-4">Client & Tél</th>
+                <th class="px-5 py-4">Gouvernorat</th>
+                <th class="px-5 py-4">Articles</th>
+                <th class="px-5 py-4">Total COD</th>
+                <th class="px-5 py-4">Statut</th>
+                <th class="px-5 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody" class="divide-y divide-white/5 text-zinc-300">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER SIGNUP -->
+  <section class="relative z-10 border-t border-white/[0.06] bg-carbon/60 py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center space-y-6">
+      <h3 class="font-display text-2xl sm:text-3xl font-bold uppercase text-white">REJOIGNEZ L'ORBITE ASTRON</h3>
+      <p class="text-zinc-400 text-xs sm:text-sm">Inscrivez-vous pour recevoir un code promo exclusif de 10% sur votre première commande.</p>
+      <form onsubmit="handleNewsletter(event)" class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+        <input type="email" id="newsletter-email" required placeholder="Votre adresse email..." class="w-full bg-obsidian border border-white/15 rounded-xl px-4 py-3 text-xs text-white outline-none focus:border-white/40" />
+        <button type="submit" class="w-full sm:w-auto bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-widest px-6 py-3 rounded-xl transition cursor-pointer whitespace-nowrap">
+          S'inscrire
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="relative z-10 border-t border-white/[0.06] bg-obsidian py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="flex items-center gap-4">
+        <svg class="w-7 h-9 text-white" viewBox="0 0 60 110" fill="none">
+          <path d="M30 4 C31 24, 33 27, 54 29 C33 31, 31 34, 30 66 C29 34, 27 31, 6 29 C27 27, 29 24, 30 4 Z" fill="#ffffff"/>
+        </svg>
+        <div>
+          <span class="font-display font-extrabold text-xl tracking-[0.24em] text-white block">ASTRON</span>
+          <span class="text-zinc-500 text-[11px]">Tunisia Performance Division • Orbital Athletic Wear</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-8 text-xs font-grotesk uppercase tracking-widest text-zinc-400">
+        <a href="#stage-3d" class="hover:text-white transition">Lookbook</a>
+        <a href="#collection" class="hover:text-white transition">Collection</a>
+        <a href="#size-finder" class="hover:text-white transition">Size Finder</a>
+        <button type="button" onclick="toggleAdminConsole()" class="hover:text-white transition">Console COD</button>
+      </div>
+
+      <p class="text-zinc-500 text-xs text-center md:text-right">
+        &copy; 2026 ASTRON ATHLETICS. Tous droits réservés. Paiement Cash à la livraison sur toute la Tunisie.
       </p>
     </div>
   </footer>
 
-  <!-- QUICK VIEW MODAL -->
-  <div id="quickview-modal" onclick="if(event.target===this) closeQuickView()" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="obsidian-card max-w-2xl w-full rounded-3xl overflow-hidden shadow-2xl border border-white/15">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
-        <span class="font-grotesk text-xs uppercase tracking-[0.22em] text-zinc-300 font-bold">DÉTAILS DE LA PIÈCE</span>
+  <!-- QUICK VIEW POPUP MODAL -->
+  <div id="quickview-modal" onclick="if(event.target===this) closeQuickView()" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="obsidian-card max-w-2xl w-full rounded-3xl overflow-hidden shadow-2xl border border-white/20">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-obsidian">
+        <span class="font-grotesk text-xs uppercase tracking-[0.22em] text-zinc-300 font-bold">DÉTAILS TECHNIQUE DU PRODUIT</span>
         <button type="button" onclick="closeQuickView()" class="text-zinc-400 hover:text-white text-2xl leading-none cursor-pointer">&times;</button>
       </div>
-      <div id="quickview-content" class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6 items-center"></div>
+      <div id="quickview-content" class="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+        <!-- Rendered dynamically -->
+      </div>
     </div>
   </div>
 
@@ -408,6 +774,7 @@
   <div id="cart-drawer" onclick="if(event.target===this) toggleCart(false)" class="fixed inset-0 z-50 hidden justify-end bg-black/80 backdrop-blur-sm">
     <div class="bg-carbon w-full max-w-md h-full border-l border-white/10 flex flex-col justify-between overflow-y-auto">
 
+      <!-- Drawer Header -->
       <div class="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-carbon/95 backdrop-blur-md z-10">
         <div>
           <h3 class="font-display text-xl font-bold uppercase text-white">Votre Panier</h3>
@@ -416,34 +783,48 @@
         <button type="button" onclick="toggleCart(false)" class="w-9 h-9 rounded-xl bg-steel text-zinc-300 hover:text-white flex items-center justify-center text-xl cursor-pointer">&times;</button>
       </div>
 
-      <div id="cart-items-container" class="p-6 flex-1 space-y-4"></div>
-
-      <div id="order-receipt" class="hidden p-6 m-6 bg-obsidian border border-emerald-500/40 rounded-2xl space-y-4">
-        <div class="flex items-center gap-3 text-emerald-400">
-          <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <h4 class="font-display font-bold uppercase text-base">Commande Confirmée !</h4>
-        </div>
-        <div id="receipt-details" class="text-xs text-zinc-300 space-y-1.5 leading-relaxed"></div>
-        <button type="button" onclick="resetAfterReceipt()" class="w-full bg-steel hover:bg-zinc-700 text-white font-grotesk text-xs uppercase tracking-widest py-3 rounded-xl transition cursor-pointer">
-          Continuer mes achats
-        </button>
+      <!-- Items List -->
+      <div id="cart-items-container" class="p-6 flex-1 space-y-4">
+        <!-- Rendered dynamically -->
       </div>
 
+      <!-- Receipt Box (On Order Success) -->
+      <div id="order-receipt" class="hidden p-6 m-6 bg-obsidian border border-emerald-500/40 rounded-2xl space-y-4">
+        <div id="printable-invoice" class="space-y-4">
+          <div class="flex items-center gap-3 text-emerald-400">
+            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h4 class="font-display font-bold uppercase text-base">Commande Confirmée !</h4>
+          </div>
+          <div id="receipt-details" class="text-xs text-zinc-300 space-y-2 leading-relaxed">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+        <div class="flex items-center gap-2 pt-2">
+          <button type="button" onclick="window.print()" class="flex-1 bg-white/10 hover:bg-white/20 text-white font-grotesk text-xs uppercase tracking-widest py-3 rounded-xl transition cursor-pointer">
+            Imprimer Facture
+          </button>
+          <button type="button" onclick="resetAfterReceipt()" class="flex-1 bg-white text-obsidian font-grotesk text-xs uppercase font-bold tracking-widest py-3 rounded-xl transition cursor-pointer">
+            Fermer
+          </button>
+        </div>
+      </div>
+
+      <!-- Checkout Form & Totals -->
       <div id="checkout-section" class="p-6 border-t border-white/10 bg-obsidian/95 space-y-4">
         <div class="space-y-1.5 text-sm">
           <div class="flex justify-between text-zinc-400">
             <span>Sous-total</span>
-            <span id="cart-subtotal">0 TND</span>
+            <span id="cart-subtotal" class="font-mono">0 TND</span>
           </div>
           <div class="flex justify-between text-zinc-400">
-            <span>Livraison (Tunisie)</span>
-            <span id="cart-shipping">7 TND</span>
+            <span>Frais de livraison (Tunisie)</span>
+            <span id="cart-shipping" class="font-mono">7 TND</span>
           </div>
           <div class="flex justify-between text-white font-display font-bold text-lg pt-2 border-t border-white/10">
             <span>Total à payer (COD)</span>
-            <span id="cart-total" class="text-white">0 TND</span>
+            <span id="cart-total" class="text-white font-mono">0 TND</span>
           </div>
         </div>
 
@@ -456,7 +837,7 @@
 
           <select id="cust-gov" required
             class="w-full bg-carbon border border-white/10 focus:border-white/40 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
-            <option value="">Sélectionner votre Gouvernorat (24) *</option>
+            <option value="">Sélectionner Gouvernorat (24) *</option>
             <option value="Tunis">Tunis</option>
             <option value="Ariana">Ariana</option>
             <option value="Ben Arous">Ben Arous</option>
@@ -495,24 +876,335 @@
     </div>
   </div>
 
+  <!-- APPLICATION CORE JAVASCRIPT ENGINE -->
   <script>
     /* ==========================================================================
-       GOOGLE SHEETS WEB APP URL (ASTRON - Commandes)
+       GOOGLE SHEETS WEB APP URL
        ========================================================================== */
     const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz-HK9ycbWOxzcIS8P7OUDOmA6mb3kElxzMTHfTfYY2TWuxMmEJt28ynPirMy2zYK6y/exec";
 
     /* ==========================================================================
-       PHOTO ASSETS (4 FILES IN REPOSITORY ROOT)
+       WEB AUDIO API SYNTHESIZER ENGINE (PROCEDURAL SOUND EFFECTS)
        ========================================================================== */
-    const PHOTOS = {
-      teeFront: "./tee-front.jpg",
-      teeBack: "./tee-back.jpg",
-      crewneck: "./crewneck.jpg",
-      jacket: "./jacket.jpg"
-    };
+    let audioCtx = null;
+    let isAudioMuted = true;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleAudioEngine() {
+      initAudioContext();
+      isAudioMuted = !isAudioMuted;
+      const label = document.getElementById('audio-status-label');
+      if (label) label.textContent = isAudioMuted ? "SOUND: OFF" : "SOUND: ON";
+      
+      const eqContainer = document.getElementById('eq-container');
+      if (isAudioMuted) {
+        document.getElementById('eq1').style.height = '4px';
+        document.getElementById('eq2').style.height = '4px';
+        document.getElementById('eq3').style.height = '4px';
+      } else {
+        playUiClickSound();
+        animateEqBars();
+      }
+    }
+
+    function animateEqBars() {
+      if (isAudioMuted) return;
+      document.getElementById('eq1').style.height = Math.floor(Math.random() * 12 + 4) + 'px';
+      document.getElementById('eq2').style.height = Math.floor(Math.random() * 14 + 4) + 'px';
+      document.getElementById('eq3').style.height = Math.floor(Math.random() * 10 + 4) + 'px';
+      setTimeout(animateEqBars, 150);
+    }
+
+    function playUiClickSound() {
+      if (isAudioMuted || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+      } catch(e){}
+    }
+
+    function playOrderChime() {
+      if (isAudioMuted || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      } catch(e){}
+    }
 
     /* ==========================================================================
-       1. THREE.JS 3D STAR & 1300 STARS SPACE BACKGROUND
+       DYNAMIC CUSTOM CURSOR ENGINE
+       ========================================================================== */
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    function initCustomCursor() {
+      const dot = document.getElementById('custom-cursor-dot');
+      const ring = document.getElementById('custom-cursor-ring');
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (dot) {
+          dot.style.left = `${mouseX}px`;
+          dot.style.top = `${mouseY}px`;
+        }
+      });
+
+      function renderCursor() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        if (ring) {
+          ring.style.left = `${ringX}px`;
+          ring.style.top = `${ringY}px`;
+        }
+        requestAnimationFrame(renderCursor);
+      }
+      renderCursor();
+
+      // Interactive hover snapping
+      document.querySelectorAll('a, button, input, select').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          if (ring) {
+            ring.style.width = '54px';
+            ring.style.height = '54px';
+            ring.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+            ring.style.background = 'rgba(255, 255, 255, 0.05)';
+          }
+        });
+        el.addEventListener('mouseleave', () => {
+          if (ring) {
+            ring.style.width = '36px';
+            ring.style.height = '36px';
+            ring.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+            ring.style.background = 'transparent';
+          }
+        });
+      });
+    }
+
+    /* ==========================================================================
+       GLOBAL STARFIELD CANVAS BACKDROP
+       ========================================================================== */
+    let globalStarAnimId = null;
+
+    function startGlobalStarfield() {
+      const canvas = document.getElementById('global-starfield-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      const resize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      let pointerX = 0;
+      let pointerY = 0;
+      window.addEventListener('mousemove', (e) => {
+        pointerX = (e.clientX / Math.max(1, window.innerWidth) - 0.5) * 2;
+        pointerY = (e.clientY / Math.max(1, window.innerHeight) - 0.5) * 2;
+      });
+
+      // 2,300 stars organized into 3 depth layers
+      const farStarsList = Array.from({ length: 1450 }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: 0.5 + Math.random() * 0.8,
+        baseAlpha: 0.3 + Math.random() * 0.4,
+        vy: -0.00004 - Math.random() * 0.00006,
+        twinkleSpeed: 0.01 + Math.random() * 0.02,
+        phase: Math.random() * Math.PI * 2
+      }));
+
+      const midStarsList = Array.from({ length: 650 }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: 1.0 + Math.random() * 1.1,
+        baseAlpha: 0.5 + Math.random() * 0.35,
+        vy: -0.00008 - Math.random() * 0.00012,
+        twinkleSpeed: 0.02 + Math.random() * 0.03,
+        phase: Math.random() * Math.PI * 2
+      }));
+
+      const nearStarsList = Array.from({ length: 200 }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: 1.5 + Math.random() * 1.2,
+        baseAlpha: 0.7 + Math.random() * 0.3,
+        vy: -0.00014 - Math.random() * 0.00018,
+        twinkleSpeed: 0.03 + Math.random() * 0.04,
+        phase: Math.random() * Math.PI * 2
+      }));
+
+      let time = 0;
+
+      const render = () => {
+        time += 1;
+        const w = canvas.width;
+        const h = canvas.height;
+        const scrollOffset = window.scrollY * 0.00015;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw Layer 1: Far Stars
+        for (const s of farStarsList) {
+          s.y += s.vy;
+          if (s.y < 0) s.y = 1;
+          const alpha = Math.max(0.1, s.baseAlpha + Math.sin(time * s.twinkleSpeed + s.phase) * 0.25);
+          const px = s.x * w + pointerX * 8;
+          const py = ((s.y + scrollOffset * 0.3) % 1) * h + pointerY * 8;
+          ctx.fillStyle = `rgba(212, 212, 216, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(px, py, s.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw Layer 2: Mid Stars
+        for (const s of midStarsList) {
+          s.y += s.vy;
+          if (s.y < 0) s.y = 1;
+          const alpha = Math.max(0.15, s.baseAlpha + Math.sin(time * s.twinkleSpeed + s.phase) * 0.3);
+          const px = s.x * w + pointerX * 18;
+          const py = ((s.y + scrollOffset * 0.6) % 1) * h + pointerY * 18;
+          ctx.fillStyle = `rgba(244, 244, 245, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(px, py, s.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw Layer 3: Near Stars
+        for (const s of nearStarsList) {
+          s.y += s.vy;
+          if (s.y < 0) s.y = 1;
+          const alpha = Math.max(0.2, s.baseAlpha + Math.sin(time * s.twinkleSpeed + s.phase) * 0.35);
+          const px = s.x * w + pointerX * 32;
+          const py = ((s.y + scrollOffset) % 1) * h + pointerY * 32;
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(px, py, s.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        globalStarAnimId = requestAnimationFrame(render);
+      };
+
+      if (globalStarAnimId) cancelAnimationFrame(globalStarAnimId);
+      render();
+    }
+
+    /* ==========================================================================
+       GALAXY CANVAS BACKDROP & PARALLAX
+       ========================================================================== */
+    function initGalaxyCanvas() {
+      const canvas = document.getElementById('galaxy-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      const resize = () => {
+        canvas.width = canvas.offsetWidth || window.innerWidth;
+        canvas.height = canvas.offsetHeight || window.innerHeight;
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      const dustParticles = Array.from({ length: 450 }, (_, i) => {
+        const arm = i % 2 === 0 ? 0 : Math.PI;
+        const dist = Math.pow(Math.random(), 0.7) * 0.44;
+        const angle = arm + dist * 9.5 + (Math.random() - 0.5) * 0.5;
+        return {
+          dist,
+          angle,
+          radius: 1 + Math.random() * 2.8,
+          alpha: 0.15 + Math.random() * 0.55,
+          speed: 0.0006 + (0.45 - dist) * 0.001
+        };
+      });
+
+      let t = 0;
+      const draw = () => {
+        t += 1;
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w * 0.5;
+        const cy = h * 0.48;
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "#050608";
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(-0.4 + Math.sin(t * 0.001) * 0.03);
+        ctx.scale(1.4, 0.55);
+
+        const coreGrad = ctx.createRadialGradient(0, 0, 8, 0, 0, Math.min(w, h) * 0.45);
+        coreGrad.addColorStop(0, "rgba(255, 255, 255, 0.35)");
+        coreGrad.addColorStop(0.35, "rgba(161, 161, 170, 0.15)");
+        coreGrad.addColorStop(0.7, "rgba(39, 39, 42, 0.05)");
+        coreGrad.addColorStop(1, "rgba(5, 6, 8, 0)");
+        ctx.fillStyle = coreGrad;
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.min(w, h) * 0.45, 0, Math.PI * 2);
+        ctx.fill();
+
+        const maxR = Math.max(w, h) * 0.55;
+        for (const p of dustParticles) {
+          p.angle += p.speed;
+          const r = p.dist * maxR;
+          const x = Math.cos(p.angle) * r;
+          const y = Math.sin(p.angle) * r;
+          ctx.fillStyle = `rgba(228, 228, 231, ${p.alpha})`;
+          ctx.beginPath();
+          ctx.arc(x, y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+        requestAnimationFrame(draw);
+      };
+
+      draw();
+    }
+
+    function updateGalaxyParallax(elapsed, rotX, rotY) {
+      const layer = document.getElementById("galaxy-layer");
+      if (!layer) return;
+      const driftX = Math.sin(elapsed * 0.2) * 16 - rotY * 24;
+      const driftY = Math.cos(elapsed * 0.16) * 10 + rotX * 20;
+      const deg = -2 + Math.sin(elapsed * 0.1) * 2 - rotY * 3.5;
+      layer.style.transform = `translate3d(${driftX.toFixed(1)}px, ${driftY.toFixed(1)}px, 0) rotate(${deg.toFixed(2)}deg) scale(1.08)`;
+    }
+
+    /* ==========================================================================
+       THREE.JS 3D INTERACTIVE EMBLEM ENGINE
        ========================================================================== */
     let scene, camera, renderer, starGroup, rimLight1, rimLight2, farStars, nearStars;
     let isDragging = false, prevMouse = { x: 0, y: 0 };
@@ -526,7 +1218,7 @@
       if (!canvas || !wrapper || typeof THREE === 'undefined') return;
 
       scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x050608, 0.028);
+      scene.fog = new THREE.FogExp2(0x050608, 0.024);
 
       camera = new THREE.PerspectiveCamera(42, wrapper.clientWidth / wrapper.clientHeight, 0.1, 140);
       camera.position.set(0, -0.2, 8.2);
@@ -540,6 +1232,7 @@
       starGroup = new THREE.Group();
       scene.add(starGroup);
 
+      // Construct Custom Extruded Star Geometry
       const upperStarShape = new THREE.Shape();
       upperStarShape.moveTo(0, 2.35);
       upperStarShape.quadraticCurveTo(0.14, 0.45, 0.35, 0.28);
@@ -575,15 +1268,15 @@
 
       const metallicStarMat = new THREE.MeshStandardMaterial({
         color: 0x262930,
-        metalness: 0.94,
-        roughness: 0.2,
+        metalness: 0.95,
+        roughness: 0.18,
       });
 
       const upperMesh = new THREE.Mesh(upperGeo, metallicStarMat);
       const lowerMesh = new THREE.Mesh(lowerGeo, metallicStarMat);
 
       const upperEdges = new THREE.EdgesGeometry(upperGeo, 25);
-      const edgeMat = new THREE.LineBasicMaterial({ color: 0xd4d4d8, transparent: true, opacity: 0.45 });
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0xe4e4e7, transparent: true, opacity: 0.45 });
       const upperWire = new THREE.LineSegments(upperEdges, edgeMat);
 
       starGroup.add(upperMesh);
@@ -598,6 +1291,7 @@
       orbitalRing.name = "orbitalRing";
       starGroup.add(orbitalRing);
 
+      // Lighting Setup
       const ambientLight = new THREE.AmbientLight(0xd4d4d8, 0.45);
       scene.add(ambientLight);
 
@@ -613,7 +1307,7 @@
       rimLight2.position.set(4.8, -2.5, 3);
       scene.add(rimLight2);
 
-      // 1,300 stars in space background
+      // 1,300 Space Stars inside WebGL Scene
       const farCount = 950;
       const farGeo = new THREE.BufferGeometry();
       const farPos = new Float32Array(farCount * 3);
@@ -640,6 +1334,7 @@
       nearStars = new THREE.Points(nearGeo, nearMat);
       scene.add(nearStars);
 
+      // Mouse Drag Controls
       const onDown = (clientX, clientY) => {
         isDragging = true;
         prevMouse = { x: clientX, y: clientY };
@@ -693,11 +1388,12 @@
       }
       if (nearStars) nearStars.rotation.y = -elapsed * 0.022;
 
+      updateGalaxyParallax(elapsed, starGroup.rotation.x, starGroup.rotation.y);
       renderer.render(scene, camera);
     }
 
     function toggleVibe() {
-      vibeMode = (vibeMode + 1) % 2;
+      vibeMode = (vibeMode + 1) % 3;
       const ring = starGroup ? starGroup.getObjectByName("orbitalRing") : null;
       const label = document.getElementById("vibe-label");
 
@@ -705,121 +1401,285 @@
         if (rimLight1) rimLight1.color.setHex(0xe4e4e7);
         if (nearStars) nearStars.material.color.setHex(0xf4f4f5);
         if (ring) ring.material.color.setHex(0xa1a1aa);
-        if (label) label.textContent = "TITANIUM";
+        if (label) label.textContent = "TITANIUM CHROME";
+      } else if (vibeMode === 1) {
+        if (rimLight1) rimLight1.color.setHex(0x3b82f6);
+        if (nearStars) nearStars.material.color.setHex(0x60a5fa);
+        if (ring) ring.material.color.setHex(0x93c5fd);
+        if (label) label.textContent = "CYBER BLUE";
       } else {
-        if (rimLight1) rimLight1.color.setHex(0x9ca3af);
-        if (nearStars) nearStars.material.color.setHex(0xd4d4d8);
-        if (ring) ring.material.color.setHex(0x71717a);
-        if (label) label.textContent = "OBSIDIAN";
+        if (rimLight1) rimLight1.color.setHex(0x10b981);
+        if (nearStars) nearStars.material.color.setHex(0x34d399);
+        if (ring) ring.material.color.setHex(0x6ee7b7);
+        if (label) label.textContent = "OBSIDIAN EMERALD";
       }
     }
 
     /* ==========================================================================
-       2. PRODUCTS DATA
+       EXTENDED PRODUCT CATALOG DATA (8 PRODUCTS)
        ========================================================================== */
     const products = [
       {
         id: "obsidian-tribal-tee",
         name: "Obsidian Tribal Compression Tee",
         subtitle: "Compression Pro • Motifs Tribaux & Étoile Dos/Poitrine",
+        category: "compression",
         price: 69,
+        popularity: 98,
         tag: "BEST SELLER",
         gsm: "250 GSM",
         composition: "78% Nylon Tactel, 22% Élasthanne",
-        frontSrc: PHOTOS.teeFront,
-        backSrc: PHOTOS.teeBack,
+        garmentType: "tee",
         features: [
           "Motifs tribaux gris anthracite sur les épaules et le dos",
           "Étoile métallique signature sur la poitrine et le haut du dos",
-          "Coupe athlétique seconde peau"
+          "Coupe athlétique seconde peau ultra-respirante"
         ]
       },
       {
         id: "obsidian-crewneck",
         name: "Obsidian Slate Stripe Crewneck",
         subtitle: "Sweatshirt Col Rond • Bandes Gris Anthracite & Étoile",
+        category: "outerwear",
         price: 95,
+        popularity: 92,
         tag: "DROP 01",
         gsm: "340 GSM",
         composition: "80% Coton Lourd, 20% Polyester",
-        frontSrc: PHOTOS.crewneck,
-        backSrc: PHOTOS.crewneck,
+        garmentType: "crewneck",
         features: [
           "Bandes latérales et manches gris anthracite intégrées",
           "Étoile ASTRON détaillée au centre de la poitrine",
-          "Finition col rond et bords-côtes structurés"
+          "Finition col rond et bords-côtes structurés haute tenue"
         ]
       },
       {
         id: "obsidian-fleece-jacket",
         name: "Obsidian Sherpa Zip Fleece Jacket",
         subtitle: "Veste Zippée • Texture Bouclée Noire & Bandes Latérales",
+        category: "outerwear",
         price: 119,
+        popularity: 95,
         tag: "LIMITED",
         gsm: "380 GSM",
         composition: "100% Polaire Bouclée Haute Densité",
-        frontSrc: PHOTOS.jacket,
-        backSrc: PHOTOS.jacket,
+        garmentType: "jacket",
         features: [
           "Matière noire texturée avec zip frontal et poches zippées",
           "Bandes gris anthracite sur les manches et étoile poitrine",
           "Col montant protecteur idéal mi-saison et hiver"
         ]
+      },
+      {
+        id: "obsidian-tactical-leggings",
+        name: "Obsidian Tactical Compression Leggings",
+        subtitle: "Collant Athlétique Pro • Maintien Musculaire Vectoriel",
+        category: "bottoms",
+        price: 79,
+        popularity: 88,
+        tag: "NOUVEAU",
+        gsm: "260 GSM",
+        composition: "75% Nylon, 25% Spandex Haute Restitution",
+        garmentType: "leggings",
+        features: [
+          "Panneaux de compression ciblés pour quadriceps et mollets",
+          "Poche téléphone étanche intégrée sur la cuisse droite",
+          "Ceinture gainante avec cordon de serrage plat interne"
+        ]
+      },
+      {
+        id: "obsidian-running-shorts",
+        name: "Obsidian Vector Pro Running Shorts",
+        subtitle: "Short Dual-Layer • Sous-short de Compression Intégré",
+        category: "bottoms",
+        price: 59,
+        popularity: 85,
+        tag: "ESSENTIEL",
+        gsm: "220 GSM",
+        composition: "Ultralight Ripstop Outer + Tactel Inner Liner",
+        garmentType: "shorts",
+        features: [
+          "Short 2-en-1 avec sous-short de soutien anti-frottements",
+          "Fentes latérales laser pour une mobilité d'amplitude maximale",
+          "Zip arrière étanche pour clés et cartes d'entraînement"
+        ]
+      },
+      {
+        id: "obsidian-heavy-hoodie",
+        name: "Obsidian Heavyweight Stealth Hoodie",
+        subtitle: "Hoodie Structuré 420 GSM • Capuche Double Épaisseur",
+        category: "outerwear",
+        price: 135,
+        popularity: 96,
+        tag: "PREMIUM",
+        gsm: "420 GSM",
+        composition: "100% Coton Bio Brossé Lourd",
+        garmentType: "hoodie",
+        features: [
+          "Coupe oversize structurée sans cordon de serrage visuel",
+          "Poche kangourou invisible dissimulée dans les coutures",
+          "Broderie gravée de l'étoile ASTRON en fil métallique chrome"
+        ]
+      },
+      {
+        id: "obsidian-tactical-vest",
+        name: "Obsidian Modular Utility Tactical Vest",
+        subtitle: "Gilet Modulaire • Poches Décompressibles & Réflecteurs",
+        category: "outerwear",
+        price: 109,
+        popularity: 82,
+        tag: "TECHWEAR",
+        gsm: "310 GSM",
+        composition: "Cordura Ballistic Nylon + Doublure Mesh",
+        garmentType: "vest",
+        features: [
+          "Structure modulaire avec sangles de réglage micrométriques",
+          "Poches poitrine aimantées à fermeture rapide",
+          "Éléments réfléchissants 3M pour visibilité nocturne"
+        ]
+      },
+      {
+        id: "obsidian-thermal-baselayer",
+        name: "Obsidian Long-Sleeve Thermal Baselayer",
+        subtitle: "Maillot Thermique Manches Longues • Fiber Shield",
+        category: "compression",
+        price: 75,
+        popularity: 90,
+        tag: "PRO ATHLETE",
+        gsm: "280 GSM",
+        composition: "Mérinos Synthétique & Elastane Heat-Lock",
+        garmentType: "baselayer",
+        features: [
+          "Passe-pouces ergonomiques intégrés aux poignets",
+          "Régulation thermique active maintenant la température à 37°C",
+          "Coutures plates flatlock anti-irritation"
+        ]
       }
     ];
 
-    const selectedSizes = {
-      "obsidian-tribal-tee": "M",
-      "obsidian-crewneck": "M",
-      "obsidian-fleece-jacket": "M"
-    };
+    const selectedSizes = {};
+    products.forEach(p => selectedSizes[p.id] = "M");
 
     let activeStageProductId = "obsidian-tribal-tee";
     let activeStageAngle = "front";
+    let activeCategory = "all";
+    let activeSort = "popular";
 
     /* ==========================================================================
-       3. 3D PERSPECTIVE SHOWCASE & CARDS
+       SVG VECTOR GARMENT RENDER ENGINE (PROCEDURAL GRAPHICS)
+       ========================================================================== */
+    function generateGarmentSVG(garmentType, angle) {
+      const isBack = angle === 'back';
+      const isZoom = angle === 'zoom';
+
+      if (isZoom) {
+        return `
+          <rect width="400" height="450" fill="#07090d" rx="16"/>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          </pattern>
+          <rect width="400" height="450" fill="url(#grid)" />
+          <circle cx="200" cy="225" r="140" fill="none" stroke="rgba(255,255,255,0.15)" stroke-dasharray="4,4"/>
+          <path d="M120 180 Q 200 120 280 180 T 360 180" fill="none" stroke="#a1a1aa" stroke-width="3" opacity="0.6"/>
+          <path d="M120 220 Q 200 160 280 220 T 360 220" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.8"/>
+          <path d="M120 260 Q 200 200 280 260 T 360 260" fill="none" stroke="#a1a1aa" stroke-width="3" opacity="0.6"/>
+          <path d="M200 180 L204 216 L240 225 L204 234 L200 270 L196 234 L160 225 L196 216 Z" fill="url(#navStarGrad)"/>
+          <text x="200" y="340" text-anchor="middle" fill="#e4e4e7" font-family="Space Grotesk" font-size="14" letter-spacing="3">FIBRES TISSÉES HAUTE DENSITÉ</text>
+        `;
+      }
+
+      if (garmentType === 'tee' || garmentType === 'baselayer') {
+        const sleeveLen = garmentType === 'baselayer' ? 220 : 150;
+        return `
+          <path d="M120 90 L160 70 Q200 85 240 70 L280 90 L320 ${sleeveLen} L280 ${sleeveLen + 20} L270 140 L270 380 L130 380 L130 140 L120 ${sleeveLen + 20} L80 ${sleeveLen} Z" fill="#12151c" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+          <path d="M120 90 L160 70 L175 110 L135 125 Z" fill="#27272a"/>
+          <path d="M280 90 L240 70 L225 110 L265 125 Z" fill="#27272a"/>
+          ${!isBack ? `
+            <path d="M200 150 L203 175 L225 180 L203 185 L200 210 L197 185 L175 180 L197 175 Z" fill="#ffffff"/>
+            <path d="M160 200 L240 200" stroke="rgba(255,255,255,0.15)" stroke-width="2" stroke-dasharray="4,4"/>
+          ` : `
+            <path d="M200 120 L206 170 L250 180 L206 190 L200 240 L194 190 L150 180 L194 170 Z" fill="url(#navStarGrad)"/>
+            <path d="M140 250 L260 250" stroke="#a1a1aa" stroke-width="3"/>
+          `}
+        `;
+      }
+
+      if (garmentType === 'crewneck' || garmentType === 'hoodie' || garmentType === 'vest') {
+        return `
+          <path d="M110 95 L160 65 Q200 80 240 65 L290 95 L335 180 L290 200 L275 160 L275 390 L125 390 L125 160 L110 200 L65 180 Z" fill="#161920" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+          <path d="M125 160 L145 160 L145 390 L125 390 Z" fill="#3f3f46"/>
+          <path d="M275 160 L255 160 L255 390 L275 390 Z" fill="#3f3f46"/>
+          ${garmentType === 'hoodie' ? '<path d="M160 65 Q200 120 240 65 Q200 30 160 65 Z" fill="#0d0f14" stroke="#52525b" stroke-width="2"/>' : ''}
+          <path d="M200 170 L204 200 L230 205 L204 210 L200 240 L196 210 L170 205 L196 200 Z" fill="#ffffff"/>
+        `;
+      }
+
+      if (garmentType === 'jacket') {
+        return `
+          <path d="M110 90 L160 65 L240 65 L290 90 L330 180 L285 200 L270 160 L270 390 L130 390 L130 160 L115 200 L70 180 Z" fill="#0d0f14" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+          <path d="M130 160 L270 160 L270 390 L130 390 Z" fill="#18181b"/>
+          <line x1="200" y1="65" x2="200" y2="390" stroke="#e4e4e7" stroke-width="3.5"/>
+          <path d="M200 150 L204 170 L220 175 L204 180 L200 195 L196 180 L180 175 L196 170 Z" fill="#ffffff"/>
+        `;
+      }
+
+      if (garmentType === 'leggings' || garmentType === 'shorts') {
+        const height = garmentType === 'shorts' ? 260 : 400;
+        return `
+          <path d="M140 100 L260 100 L280 160 L260 ${height} L210 ${height} L200 200 L190 ${height} L140 ${height} L120 160 Z" fill="#12151c" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+          <path d="M140 100 L260 100 L260 135 L140 135 Z" fill="#27272a"/>
+          <path d="M200 150 L203 170 L220 175 L203 180 L200 200 L197 180 L180 175 L197 170 Z" fill="#ffffff"/>
+        `;
+      }
+
+      return '';
+    }
+
+    /* ==========================================================================
+       3D LOOKBOOK STAGE CONTROL
        ========================================================================== */
     function renderStage3D() {
       const prod = products.find(p => p.id === activeStageProductId) || products[0];
-      const photoEl = document.getElementById('stage-photo');
+      const svgEl = document.getElementById('stage-garment-svg');
       const titleEl = document.getElementById('stage-title');
       const priceEl = document.getElementById('stage-price-label');
+      const descEl = document.getElementById('stage-desc');
+      const gsmTag = document.getElementById('stage-gsm-tag');
       const angleLabel = document.getElementById('stage-angle-label');
       const btnsWrap = document.getElementById('stage-piece-buttons');
       const frontBtn = document.getElementById('btn-view-front');
       const backBtn = document.getElementById('btn-view-back');
+      const zoomBtn = document.getElementById('btn-view-zoom');
 
-      if (!photoEl || !titleEl || !priceEl) return;
+      if (!svgEl || !titleEl || !priceEl) return;
 
-      const chosenSrc = activeStageAngle === "back" ? prod.backSrc : prod.frontSrc;
-      photoEl.src = chosenSrc;
-      photoEl.alt = prod.name;
+      svgEl.innerHTML = generateGarmentSVG(prod.garmentType, activeStageAngle);
       titleEl.textContent = prod.name;
+      descEl.textContent = prod.subtitle + " — " + prod.features[0];
       priceEl.textContent = `${prod.price} TND`;
+      if (gsmTag) gsmTag.textContent = prod.gsm;
 
       if (angleLabel) {
-        angleLabel.textContent = activeStageAngle === "back" ? "VUE DOS" : "VUE FACE";
+        angleLabel.textContent = activeStageAngle === "back" ? "VUE DOS" : activeStageAngle === "zoom" ? "ZOOM FIBRES" : "VUE FACE";
       }
 
-      if (frontBtn && backBtn) {
-        frontBtn.className = activeStageAngle === "front"
-          ? "px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-white text-obsidian transition cursor-pointer"
-          : "px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-steel text-zinc-300 hover:text-white border border-white/10 transition cursor-pointer";
-        backBtn.className = activeStageAngle === "back"
-          ? "px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-white text-obsidian transition cursor-pointer"
-          : "px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-steel text-zinc-300 hover:text-white border border-white/10 transition cursor-pointer";
+      if (frontBtn && backBtn && zoomBtn) {
+        const activeCls = "px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-white text-obsidian transition cursor-pointer";
+        const inactiveCls = "px-5 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold bg-steel text-zinc-300 hover:text-white border border-white/10 transition cursor-pointer";
+        frontBtn.className = activeStageAngle === "front" ? activeCls : inactiveCls;
+        backBtn.className = activeStageAngle === "back" ? activeCls : inactiveCls;
+        zoomBtn.className = activeStageAngle === "zoom" ? activeCls : inactiveCls;
       }
 
       if (btnsWrap) {
         btnsWrap.innerHTML = products.map((p, i) => `
-          <button type="button" onclick="selectStageProduct('${p.id}')"
-            class="px-3 py-2.5 rounded-xl text-xs font-grotesk uppercase tracking-wider font-bold border transition cursor-pointer truncate ${
+          <button type="button" onclick="selectStageProduct('${p.id}'); playUiClickSound();"
+            class="px-2 py-1.5 rounded-xl text-[10px] font-grotesk uppercase tracking-wider font-bold border transition cursor-pointer truncate ${
               p.id === prod.id
-                ? 'bg-white/15 border-white/40 text-white'
+                ? 'bg-white/15 border-white/50 text-white'
                 : 'bg-obsidian border-white/10 text-zinc-400 hover:text-white'
             }">
-            0${i + 1} • ${p.id === 'obsidian-tribal-tee' ? 'Tee' : p.id === 'obsidian-crewneck' ? 'Crewneck' : 'Jacket'}
+            0${i + 1}
           </button>
         `).join('');
       }
@@ -842,72 +1702,100 @@
 
     function tiltStageCard(e) {
       const card = document.getElementById('stage-3d-card');
+      const garment = document.getElementById('stage-garment-svg');
       if (!card) return;
+
       const rect = card.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = `rotateY(${x * 11}deg) rotateX(${-y * 11}deg) scale(1.015)`;
+
+      card.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg) scale(1.015)`;
+      if (garment) {
+        garment.style.transform = `translate3d(${(x * 10).toFixed(1)}px, ${(y * 10).toFixed(1)}px, 20px) scale(1.04)`;
+      }
     }
 
     function resetStageCard() {
       const card = document.getElementById('stage-3d-card');
+      const garment = document.getElementById('stage-garment-svg');
       if (card) card.style.transform = "rotateY(0deg) rotateX(0deg) scale(1)";
-    }
-
-    function bindCardTiltEvents() {
-      document.querySelectorAll('.product-3d-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / rect.width - 0.5;
-          const y = (e.clientY - rect.top) / rect.height - 0.5;
-          card.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
-        });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = "rotateY(0deg) rotateX(0deg) translateY(0)";
-        });
-      });
+      if (garment) garment.style.transform = "translate3d(0, 0, 0) scale(1)";
     }
 
     /* ==========================================================================
-       4. RENDER PRODUCTS GRID & QUICK VIEW
+       CATALOG FILTERING & SORTING ENGINE
        ========================================================================== */
+    function filterCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+        btn.className = "cat-filter-btn text-zinc-400 hover:text-white font-grotesk text-xs uppercase tracking-wider font-bold px-4 py-2 rounded-xl transition cursor-pointer";
+      });
+      const activeBtn = document.getElementById(`filter-${cat}`);
+      if (activeBtn) {
+        activeBtn.className = "cat-filter-btn bg-white text-obsidian font-grotesk text-xs uppercase tracking-wider font-bold px-4 py-2 rounded-xl transition cursor-pointer";
+      }
+      renderProducts();
+    }
+
+    function sortCatalog(val) {
+      activeSort = val;
+      renderProducts();
+    }
+
     function renderProducts() {
       const grid = document.getElementById('products-grid');
       if (!grid) return;
 
-      grid.innerHTML = products.map(prod => `
+      let filtered = activeCategory === 'all' 
+        ? [...products] 
+        : products.filter(p => p.category === activeCategory);
+
+      if (activeSort === 'price-low') {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (activeSort === 'price-high') {
+        filtered.sort((a, b) => b.price - a.price);
+      } else if (activeSort === 'gsm') {
+        filtered.sort((a, b) => parseInt(b.gsm) - parseInt(a.gsm));
+      } else {
+        filtered.sort((a, b) => b.popularity - a.popularity);
+      }
+
+      grid.innerHTML = filtered.map(prod => `
         <div class="perspective-1200">
           <article class="product-3d-card obsidian-card rounded-3xl overflow-hidden flex flex-col justify-between h-full">
             <div>
-              <div class="relative h-80 bg-[#080a0e] flex items-center justify-center overflow-hidden border-b border-white/[0.07]">
+              <div class="apparel-3d-stage relative h-72 flex items-center justify-center overflow-hidden border-b border-white/[0.08]">
+                <svg class="card-garment-img apparel-garment-img relative z-[2] w-full h-full p-6" viewBox="0 0 400 450" fill="none">
+                  ${generateGarmentSVG(prod.garmentType, 'front')}
+                </svg>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_60%,rgba(4,5,7,0.5)_100%)] z-[3] pointer-events-none"></div>
                 <span class="absolute top-4 left-4 z-10 bg-black/75 backdrop-blur-md border border-white/15 text-white text-[10px] font-grotesk font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full">
                   ${prod.tag}
                 </span>
-                <button type="button" onclick="openQuickView('${prod.id}')" class="absolute top-4 right-4 z-10 bg-black/70 hover:bg-white text-zinc-200 hover:text-obsidian border border-white/15 text-[10px] font-grotesk uppercase tracking-wider px-3 py-1 rounded-full transition cursor-pointer">
-                  Détails
+                <button type="button" onclick="openQuickView('${prod.id}'); playUiClickSound();" class="absolute top-4 right-4 z-10 bg-black/70 hover:bg-white text-zinc-200 hover:text-obsidian border border-white/15 text-[10px] font-grotesk uppercase tracking-wider px-3 py-1 rounded-full transition cursor-pointer">
+                  Détails GSM
                 </button>
-                <img src="${prod.frontSrc}" alt="${prod.name}" class="w-full h-full object-cover transition duration-500 hover:scale-105" />
               </div>
 
               <div class="p-6 pb-4">
                 <div class="flex items-start justify-between gap-2 mb-1.5">
                   <h3 class="font-display text-xl font-bold text-white leading-tight">${prod.name}</h3>
-                  <span class="font-grotesk font-bold text-lg text-white whitespace-nowrap">${prod.price} TND</span>
+                  <span class="font-grotesk font-bold text-lg text-white whitespace-nowrap font-mono">${prod.price} TND</span>
                 </div>
                 <p class="text-zinc-400 text-xs mb-5">${prod.subtitle}</p>
 
                 <div class="mb-2">
                   <div class="flex items-center justify-between text-[11px] font-grotesk uppercase tracking-wider text-zinc-400 mb-2">
-                    <span>Taille</span>
-                    <span class="text-zinc-500">${prod.gsm}</span>
+                    <span>Taille Sélectionnée</span>
+                    <span class="text-zinc-500 font-mono">${prod.gsm}</span>
                   </div>
-                  <div class="grid grid-cols-4 gap-2">
-                    ${['S', 'M', 'L', 'XL'].map(size => `
-                      <button type="button" onclick="selectProductSize('${prod.id}', '${size}')"
-                        class="py-2.5 rounded-xl text-xs font-grotesk font-bold transition cursor-pointer border ${
+                  <div class="grid grid-cols-5 gap-1.5">
+                    ${['S', 'M', 'L', 'XL', 'XXL'].map(size => `
+                      <button type="button" onclick="selectProductSize('${prod.id}', '${size}'); playUiClickSound();"
+                        class="py-2 rounded-xl text-xs font-grotesk font-bold transition cursor-pointer border ${
                           selectedSizes[prod.id] === size
                             ? 'bg-white/15 border-white/50 text-white shadow-sm'
-                            : 'bg-obsidian border-white/10 text-zinc-400 hover:border-white/30 hover:text-white'
+                            : 'bg-obsidian/90 border-white/10 text-zinc-400 hover:border-white/30 hover:text-white'
                         }">
                         ${size}
                       </button>
@@ -919,9 +1807,9 @@
 
             <div class="p-6 pt-2">
               <button type="button" onclick="addToCart('${prod.id}')"
-                class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-3.5 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-[0.2em] py-3.5 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01]">
                 <span>Ajouter au Panier</span>
-                <span class="text-zinc-600">• ${selectedSizes[prod.id]}</span>
+                <span class="text-zinc-600 font-mono">• ${selectedSizes[prod.id]}</span>
               </button>
             </div>
           </article>
@@ -936,19 +1824,42 @@
       renderProducts();
     }
 
+    function bindCardTiltEvents() {
+      document.querySelectorAll('.product-3d-card').forEach(card => {
+        const garment = card.querySelector('.card-garment-img');
+
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
+          if (garment) {
+            garment.style.transform = `translate3d(${(x * 8).toFixed(1)}px, ${(y * 8).toFixed(1)}px, 12px) scale(1.03)`;
+          }
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = "rotateY(0deg) rotateX(0deg) translateY(0)";
+          if (garment) garment.style.transform = "translate3d(0, 0, 0) scale(1)";
+        });
+      });
+    }
+
     function openQuickView(prodId) {
       const prod = products.find(p => p.id === prodId);
       if (!prod) return;
 
       const content = document.getElementById('quickview-content');
       content.innerHTML = `
-        <div class="bg-obsidian rounded-2xl border border-white/10 h-64 overflow-hidden">
-          <img src="${prod.frontSrc}" alt="${prod.name}" class="w-full h-full object-cover" />
+        <div class="apparel-3d-stage relative rounded-2xl border border-white/10 h-64 overflow-hidden flex items-center justify-center">
+          <svg class="w-full h-full p-4" viewBox="0 0 400 450" fill="none">
+            ${generateGarmentSVG(prod.garmentType, 'zoom')}
+          </svg>
         </div>
         <div class="space-y-4">
           <h4 class="font-display text-2xl font-bold text-white">${prod.name}</h4>
           <div class="flex items-center gap-3 text-xs font-grotesk">
-            <span class="bg-steel px-3 py-1 rounded-lg text-white">${prod.gsm}</span>
+            <span class="bg-white/10 border border-white/20 px-3 py-1 rounded-lg text-white font-mono">${prod.gsm}</span>
             <span class="text-zinc-400">${prod.composition}</span>
           </div>
           <ul class="space-y-2 text-xs text-zinc-300">
@@ -962,7 +1873,7 @@
           <div class="pt-2">
             <button type="button" onclick="addToCart('${prod.id}'); closeQuickView();"
               class="w-full bg-white hover:bg-zinc-200 text-obsidian font-grotesk font-bold text-xs uppercase tracking-widest py-3.5 rounded-xl transition cursor-pointer">
-              Ajouter (${selectedSizes[prod.id]}) — ${prod.price} TND
+              Ajouter au Panier (${selectedSizes[prod.id]}) — ${prod.price} TND
             </button>
           </div>
         </div>
@@ -981,9 +1892,17 @@
     }
 
     /* ==========================================================================
-       5. SIZE FINDER & CART + GOOGLE SHEETS SYNC
+       SMART SIZE FINDER AI ALGORITHM
        ========================================================================== */
     let fitPreference = 'pro';
+
+    function updateHeightSlider(val) {
+      document.getElementById('slider-height-val').textContent = `${val} cm`;
+    }
+
+    function updateWeightSlider(val) {
+      document.getElementById('slider-weight-val').textContent = `${val} kg`;
+    }
 
     function setFitPref(pref) {
       fitPreference = pref;
@@ -991,48 +1910,54 @@
       const comfBtn = document.getElementById('fit-comfort');
 
       if (pref === 'pro') {
-        proBtn.className = "fit-pref-btn bg-white/15 border border-white/40 text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
-        comfBtn.className = "fit-pref-btn bg-obsidian border border-white/10 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
+        proBtn.className = "fit-pref-btn bg-white/15 border border-white/40 text-white text-xs font-grotesk uppercase tracking-wider py-3.5 rounded-xl font-bold transition cursor-pointer";
+        comfBtn.className = "fit-pref-btn bg-obsidian border border-white/10 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3.5 rounded-xl font-bold transition cursor-pointer";
       } else {
-        comfBtn.className = "fit-pref-btn bg-white/15 border border-white/40 text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
-        proBtn.className = "fit-pref-btn bg-obsidian border border-white/10 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3 rounded-xl font-bold transition cursor-pointer";
+        comfBtn.className = "fit-pref-btn bg-white/15 border border-white/40 text-white text-xs font-grotesk uppercase tracking-wider py-3.5 rounded-xl font-bold transition cursor-pointer";
+        proBtn.className = "fit-pref-btn bg-obsidian border border-white/10 text-zinc-400 hover:text-white text-xs font-grotesk uppercase tracking-wider py-3.5 rounded-xl font-bold transition cursor-pointer";
       }
     }
 
     function calculateSize() {
-      const h = parseFloat(document.getElementById('calc-height').value);
-      const w = parseFloat(document.getElementById('calc-weight').value);
+      const h = parseFloat(document.getElementById('calc-height-slider').value);
+      const w = parseFloat(document.getElementById('calc-weight-slider').value);
 
-      if (!h || !w || h < 140 || w < 40) {
-        showToast("Veuillez entrer votre taille (cm) et poids (kg) valides.");
-        return;
-      }
-
-      const sizes = ['S', 'M', 'L', 'XL'];
+      const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
       let idx = 1;
-      if (w < 65 && h < 174) idx = 0;
-      else if (w <= 76 && h <= 181) idx = 1;
-      else if (w <= 87 && h <= 188) idx = 2;
-      else idx = 3;
 
-      if (fitPreference === 'comfort' && idx < 3) idx += 1;
+      if (w < 62 && h < 172) idx = 0;
+      else if (w <= 75 && h <= 180) idx = 1;
+      else if (w <= 88 && h <= 188) idx = 2;
+      else if (w <= 100 && h <= 195) idx = 3;
+      else idx = 4;
+
+      if (fitPreference === 'comfort' && idx < 4) idx += 1;
 
       const recommended = sizes[idx];
       document.getElementById('rec-size-badge').textContent = recommended;
       document.getElementById('rec-size-note').textContent =
         fitPreference === 'pro'
-          ? `Fit compression ajusté pour ${h} cm / ${w} kg.`
+          ? `Fit compression ajusté seconde peau pour ${h} cm / ${w} kg.`
           : `Coupe détendue (+1 taille) pour ${h} cm / ${w} kg.`;
 
       document.getElementById('size-result').classList.remove('hidden');
+
       Object.keys(selectedSizes).forEach(k => selectedSizes[k] = recommended);
       renderProducts();
-      showToast(`Taille ${recommended} sélectionnée sur toute la collection !`);
+      showToast(`Taille ${recommended} appliquée sur toute la collection !`);
     }
 
-    let cart = [];
+    /* ==========================================================================
+       CART & TUNISIA COD CHECKOUT SYSTEM
+       ========================================================================== */
+    let cart = JSON.parse(localStorage.getItem('astron_cart') || '[]');
+
+    function saveCart() {
+      localStorage.setItem('astron_cart', JSON.stringify(cart));
+    }
 
     function addToCart(prodId) {
+      playUiClickSound();
       const prod = products.find(p => p.id === prodId);
       if (!prod) return;
 
@@ -1047,10 +1972,12 @@
           name: prod.name,
           price: prod.price,
           size: size,
-          frontSrc: prod.frontSrc,
+          garmentType: prod.garmentType,
           qty: 1
         });
       }
+
+      saveCart();
 
       const receipt = document.getElementById('order-receipt');
       const checkoutSection = document.getElementById('checkout-section');
@@ -1063,9 +1990,11 @@
     }
 
     function updateQty(index, delta) {
+      playUiClickSound();
       if (!cart[index]) return;
       cart[index].qty += delta;
       if (cart[index].qty <= 0) cart.splice(index, 1);
+      saveCart();
       updateCartUI();
     }
 
@@ -1090,7 +2019,7 @@
         `;
         subtotalEl.textContent = "0 TND";
         shippingEl.textContent = "7 TND";
-        shippingEl.className = "text-zinc-400";
+        shippingEl.className = "text-zinc-400 font-mono";
         totalEl.textContent = "0 TND";
         freeBar.textContent = "Livraison gratuite dès 150 TND";
         return;
@@ -1098,19 +2027,21 @@
 
       container.innerHTML = cart.map((item, idx) => `
         <div class="bg-obsidian border border-white/10 p-3.5 rounded-2xl flex items-center gap-3.5">
-          <div class="w-14 h-16 bg-carbon rounded-xl flex-shrink-0 overflow-hidden">
-            <img src="${item.frontSrc}" alt="${item.name}" class="w-full h-full object-cover" />
+          <div class="w-14 h-16 bg-carbon rounded-xl flex-shrink-0 overflow-hidden flex items-center justify-center border border-white/10">
+            <svg class="w-full h-full p-1" viewBox="0 0 400 450" fill="none">
+              ${generateGarmentSVG(item.garmentType, 'front')}
+            </svg>
           </div>
           <div class="flex-1 min-w-0">
             <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
             <p class="text-[11px] text-zinc-400 mt-0.5">Taille: <span class="text-white font-bold">${item.size}</span> • ${item.price} TND</p>
             <div class="flex items-center gap-2 mt-2">
-              <button type="button" onclick="updateQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer">-</button>
-              <span class="text-xs font-bold px-1">${item.qty}</span>
-              <button type="button" onclick="updateQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer">+</button>
+              <button type="button" onclick="updateQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer hover:bg-zinc-700">-</button>
+              <span class="text-xs font-bold font-mono px-1">${item.qty}</span>
+              <button type="button" onclick="updateQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-steel text-white text-xs font-bold cursor-pointer hover:bg-zinc-700">+</button>
             </div>
           </div>
-          <div class="text-right font-grotesk font-bold text-sm text-white">
+          <div class="text-right font-grotesk font-bold text-sm text-white font-mono">
             ${item.price * item.qty} TND
           </div>
         </div>
@@ -1122,7 +2053,7 @@
 
       subtotalEl.textContent = `${subtotal} TND`;
       shippingEl.textContent = shipping === 0 ? "GRATUITE" : "7 TND";
-      shippingEl.className = shipping === 0 ? "text-emerald-400 font-bold" : "text-zinc-400";
+      shippingEl.className = shipping === 0 ? "text-emerald-400 font-bold font-mono" : "text-zinc-400 font-mono";
       totalEl.textContent = `${total} TND`;
 
       if (subtotal >= 150) {
@@ -1153,7 +2084,7 @@
 
       const submitBtn = document.getElementById('submit-order-btn');
       const originalBtnText = submitBtn.textContent;
-      submitBtn.textContent = "ENVOI EN COURS...";
+      submitBtn.textContent = "ENREGISTREMENT...";
       submitBtn.disabled = true;
 
       try {
@@ -1167,44 +2098,56 @@
         const total = subtotal + shipping;
         const orderRef = "AST-" + Math.floor(100000 + Math.random() * 900000);
 
-        const itemsSheetString = cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(" | ");
-        const itemsSummary = cart.map(i => `• ${i.qty}x ${i.name} (${i.size})`).join('<br>');
+        const newOrder = {
+          orderRef: orderRef,
+          customerName: name,
+          phone: phone,
+          governorate: gov,
+          address: address,
+          items: cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(", "),
+          subtotal: subtotal,
+          shipping: shipping,
+          totalPrice: total,
+          status: "PENDING",
+          date: new Date().toLocaleString("fr-FR")
+        };
 
-        if (GOOGLE_SHEET_WEBHOOK_URL) {
+        // Webhook Post call
+        try {
           await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name,
-              phone,
-              city: gov,
-              address,
-              items: `${orderRef} — ${itemsSheetString}`,
-              total
-            })
+            body: JSON.stringify(newOrder)
           });
-        }
+        } catch(wErr) {}
 
-        document.getElementById('receipt-details').innerHTML = `
-          <p><strong class="text-white">Référence :</strong> ${orderRef}</p>
-          <p><strong class="text-white">Client :</strong> ${name} (${phone})</p>
-          <p><strong class="text-white">Destination :</strong> ${gov} — ${address}</p>
-          <div class="border-t border-white/10 my-2 pt-2">${itemsSummary}</div>
-          <p><strong class="text-white">Livraison :</strong> ${shipping === 0 ? "Gratuite" : shipping + " TND"}</p>
-          <p class="text-emerald-400 font-bold pt-1">Total COD : ${total} TND</p>
+        ordersStore.unshift(newOrder);
+        saveOrdersStore();
+        renderAdminDashboard();
+
+        playOrderChime();
+
+        // Render customer receipt
+        const receiptDetails = document.getElementById('receipt-details');
+        receiptDetails.innerHTML = `
+          <div><strong>Réf Commande :</strong> <span class="font-mono text-emerald-400 font-bold">${orderRef}</span></div>
+          <div><strong>Client :</strong> ${name} (${phone})</div>
+          <div><strong>Adresse :</strong> ${address}, ${gov}</div>
+          <div><strong>Articles :</strong> ${newOrder.items}</div>
+          <div><strong>Total à payer à la livraison (COD) :</strong> <span class="text-white font-bold text-sm font-mono">${total} TND</span></div>
         `;
 
         document.getElementById('checkout-section').classList.add('hidden');
         document.getElementById('order-receipt').classList.remove('hidden');
 
         cart = [];
+        saveCart();
         updateCartUI();
-        document.getElementById('cod-form').reset();
-        showToast(`Commande ${orderRef} enregistrée !`);
+        showToast("Commande enregistrée avec succès !");
+
       } catch (err) {
-        console.error("Google Sheets sync error:", err);
-        showToast("Erreur lors de l'envoi. Veuillez réessayer.");
+        showToast("Erreur lors de la validation. Veuillez réessayer.");
       } finally {
         submitBtn.textContent = originalBtnText;
         submitBtn.disabled = false;
@@ -1217,7 +2160,221 @@
       toggleCart(false);
     }
 
-    let toastTimeout;
+    /* ==========================================================================
+       ADMIN CONSOLE & ORDER MANAGEMENT SYSTEM
+       ========================================================================== */
+    let ordersStore = JSON.parse(localStorage.getItem('astron_admin_orders') || '[]');
+
+    if (ordersStore.length === 0) {
+      ordersStore = [
+        {
+          orderRef: "AST-849201",
+          customerName: "Sami Ben Ali",
+          phone: "55123456",
+          governorate: "Tunis",
+          address: "Les Berges du Lac 2",
+          items: "Obsidian Tribal Compression Tee (L) x1",
+          subtotal: 69,
+          shipping: 7,
+          totalPrice: 76,
+          status: "CONFIRMED",
+          date: "26/11/2026, 14:20"
+        },
+        {
+          orderRef: "AST-392018",
+          customerName: "Youssef Gharbi",
+          phone: "98765432",
+          governorate: "Sousse",
+          address: "Kantaoui Resort",
+          items: "Obsidian Slate Stripe Crewneck (M) x1, Tactical Leggings (M) x1",
+          subtotal: 174,
+          shipping: 0,
+          totalPrice: 174,
+          status: "SHIPPED",
+          date: "25/11/2026, 09:45"
+        }
+      ];
+      localStorage.setItem('astron_admin_orders', JSON.stringify(ordersStore));
+    }
+
+    function saveOrdersStore() {
+      localStorage.setItem('astron_admin_orders', JSON.stringify(ordersStore));
+    }
+
+    function toggleAdminConsole() {
+      const consoleEl = document.getElementById('admin-console');
+      if (!consoleEl) return;
+      consoleEl.classList.toggle('hidden');
+      if (!consoleEl.classList.contains('hidden')) {
+        consoleEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    let adminFilterStatus = "ALL";
+    let adminSearchQuery = "";
+
+    function filterAdminStatus(status) {
+      adminFilterStatus = status;
+      document.querySelectorAll('.admin-status-btn').forEach(btn => {
+        btn.className = "admin-status-btn bg-obsidian border border-white/10 text-zinc-400 text-xs font-grotesk font-bold px-3.5 py-2 rounded-xl transition cursor-pointer";
+      });
+      renderAdminDashboard();
+    }
+
+    function filterAdminOrders() {
+      adminSearchQuery = document.getElementById('admin-search-input').value.toLowerCase().trim();
+      renderAdminDashboard();
+    }
+
+    function updateOrderStatus(ref, newStatus) {
+      const order = ordersStore.find(o => o.orderRef === ref);
+      if (order) {
+        order.status = newStatus;
+        saveOrdersStore();
+        renderAdminDashboard();
+        showToast(`Statut ${ref} mis à jour : ${newStatus}`);
+      }
+    }
+
+    function exportOrdersToCSV() {
+      if (ordersStore.length === 0) return;
+      let csv = "Ref,Client,Phone,Gov,Address,Items,Total,Status,Date\n";
+      ordersStore.forEach(o => {
+        csv += `"${o.orderRef}","${o.customerName}","${o.phone}","${o.governorate}","${o.address}","${o.items}",${o.totalPrice},"${o.status}","${o.date}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ASTRON_Orders_${Date.now()}.csv`;
+      a.click();
+    }
+
+    function renderAdminDashboard() {
+      const tbody = document.getElementById('admin-orders-tbody');
+      const totalRevEl = document.getElementById('admin-total-revenue');
+      const totalCountEl = document.getElementById('admin-total-count');
+
+      if (!tbody) return;
+
+      let filtered = ordersStore;
+      if (adminFilterStatus !== "ALL") {
+        filtered = filtered.filter(o => o.status === adminFilterStatus);
+      }
+      if (adminSearchQuery) {
+        filtered = filtered.filter(o =>
+          o.customerName.toLowerCase().includes(adminSearchQuery) ||
+          o.orderRef.toLowerCase().includes(adminSearchQuery) ||
+          o.phone.includes(adminSearchQuery)
+        );
+      }
+
+      const totalRevenue = ordersStore.reduce((acc, o) => acc + (o.status !== 'CANCELLED' ? o.totalPrice : 0), 0);
+      totalRevEl.textContent = `${totalRevenue} TND`;
+      totalCountEl.textContent = ordersStore.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="px-5 py-8 text-center text-zinc-500">
+              Aucune commande ne correspond aux critères de recherche.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(o => `
+        <tr class="hover:bg-white/[0.02]">
+          <td class="px-5 py-4 font-mono font-bold text-white">${o.orderRef}</td>
+          <td class="px-5 py-4">
+            <div class="font-semibold text-white">${o.customerName}</div>
+            <div class="text-zinc-500 text-[11px] font-mono">${o.phone}</div>
+          </td>
+          <td class="px-5 py-4 font-semibold">${o.governorate}</td>
+          <td class="px-5 py-4 max-w-xs truncate text-zinc-400" title="${o.items}">${o.items}</td>
+          <td class="px-5 py-4 font-mono font-bold text-white">${o.totalPrice} TND</td>
+          <td class="px-5 py-4">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-grotesk font-bold uppercase tracking-wider ${
+              o.status === 'CONFIRMED' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+              o.status === 'SHIPPED' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+              o.status === 'CANCELLED' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+              'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+            }">
+              ${o.status}
+            </span>
+          </td>
+          <td class="px-5 py-4 text-right space-x-1">
+            <select onchange="updateOrderStatus('${o.orderRef}', this.value)" class="bg-carbon border border-white/10 text-[10px] text-white rounded-lg px-2 py-1 outline-none">
+              <option value="PENDING" ${o.status === 'PENDING' ? 'selected' : ''}>En attente</option>
+              <option value="CONFIRMED" ${o.status === 'CONFIRMED' ? 'selected' : ''}>Confirmer</option>
+              <option value="SHIPPED" ${o.status === 'SHIPPED' ? 'selected' : ''}>Expédier</option>
+              <option value="CANCELLED" ${o.status === 'CANCELLED' ? 'selected' : ''}>Annuler</option>
+            </select>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    /* ==========================================================================
+       FAQ ACCORDION COMPONENT
+       ========================================================================== */
+    const faqs = [
+      {
+        q: "Quels sont les délais de livraison en Tunisie ?",
+        a: "Nous livrons sur l'ensemble des 24 Gouvernorats tunisiens sous 24h à 48h ouvrables via notre service de messagerie express."
+      },
+      {
+        q: "Comment fonctionne le paiement à la livraison (COD) ?",
+        a: "Vous ne payez rien en ligne. Vous validez votre commande sur le site, puis vous réglez le montant exact en espèces directement au livreur à la réception de votre colis."
+      },
+      {
+        q: "Comment choisir la bonne taille pour les produits de compression ?",
+        a: "Nos vêtements de compression sont conçus pour offrir un maintien seconde peau. Utilisez notre 'Size Finder AI' dans la section dédiée pour obtenir une recommandation basée sur votre taille et poids."
+      },
+      {
+        q: "Les frais de livraison sont-ils gratuits ?",
+        a: "La livraison est fixée au tarif standard de 7 TND, et devient 100% GRATUITE pour toute commande égale ou supérieure à 150 TND."
+      }
+    ];
+
+    function renderFAQ() {
+      const container = document.getElementById('faq-container');
+      if (!container) return;
+      container.innerHTML = faqs.map((f, i) => `
+        <div class="obsidian-card rounded-2xl overflow-hidden border border-white/10">
+          <button type="button" onclick="toggleFaq(${i}); playUiClickSound();" class="w-full text-left px-6 py-5 flex justify-between items-center text-white font-grotesk font-bold text-sm sm:text-base">
+            <span>${f.q}</span>
+            <span id="faq-icon-${i}" class="text-xl leading-none text-zinc-400">+</span>
+          </button>
+          <div id="faq-ans-${i}" class="hidden px-6 pb-5 text-xs sm:text-sm text-zinc-400 leading-relaxed border-t border-white/5 pt-3">
+            ${f.a}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleFaq(index) {
+      const ans = document.getElementById(`faq-ans-${index}`);
+      const icon = document.getElementById(`faq-icon-${index}`);
+      if (ans) {
+        ans.classList.toggle('hidden');
+        if (icon) icon.textContent = ans.classList.contains('hidden') ? '+' : '−';
+      }
+    }
+
+    function handleNewsletter(e) {
+      e.preventDefault();
+      const email = document.getElementById('newsletter-email').value;
+      if (email) {
+        showToast("Code promo 'ASTRON10' activé pour votre e-mail !");
+        document.getElementById('newsletter-email').value = "";
+      }
+    }
+
+    /* ==========================================================================
+       SYSTEM UTILITIES & TOAST NOTIFICATION
+       ========================================================================== */
     function showToast(message) {
       const box = document.getElementById('toast-box');
       const msg = document.getElementById('toast-msg');
@@ -1227,26 +2384,24 @@
       box.classList.remove('translate-y-24', 'opacity-0');
       box.classList.add('translate-y-0', 'opacity-100');
 
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
+      setTimeout(() => {
         box.classList.remove('translate-y-0', 'opacity-100');
         box.classList.add('translate-y-24', 'opacity-0');
-      }, 2800);
+      }, 3500);
     }
 
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeQuickView();
-        toggleCart(false);
-      }
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
+    /* Initialisation globale */
+    document.addEventListener('DOMContentLoaded', () => {
+      initCustomCursor();
+      startGlobalStarfield();
+      initGalaxyCanvas();
       init3DHero();
       animate3D();
       renderStage3D();
       renderProducts();
       updateCartUI();
+      renderAdminDashboard();
+      renderFAQ();
     });
   </script>
 </body>
